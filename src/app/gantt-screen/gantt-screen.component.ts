@@ -14,13 +14,10 @@ export class GanttScreenComponent implements OnInit {
 
   ngOnInit() {
     this.ganttScreenService.getGanttData().subscribe((res) => {
-      this.ganttData = [
-        ...this.ganttData,
-        ...res.map((item) => ({
-          id: item.payload.doc.id,
-          ...item.payload.doc.data(),
-        })),
-      ];
+      this.ganttData = res.map((item) => ({
+        id: item.payload.doc.id,
+        ...item.payload.doc.data(),
+      }));
     });
   }
 }
