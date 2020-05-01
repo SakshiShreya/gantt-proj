@@ -32,12 +32,28 @@ export class GanttFormComponent implements OnChanges {
   }
 
   onSubmit() {
-    const submitData = {
-      ...this.ganttForm.value,
-      startDate: this.ganttForm.value.startDate ? this.ganttForm.value.startDate.format("YYYY-MM-DD") : undefined,
-      endDate: this.ganttForm.value.endDate ? this.ganttForm.value.endDate.format("YYYY-MM-DD") : undefined,
-      dependsOn: this.ganttForm.value.dependsOn ? this.ganttForm.value.dependsOn : undefined
-    };
+    const submitData = { ...this.ganttForm.value };
+
+    if (submitData.startDate) {
+      submitData.startDate = this.ganttForm.value.startDate.format(
+        "YYYY-MM-DD"
+      );
+    } else {
+      delete submitData.startDate;
+    }
+
+    if (submitData.endDate) {
+      submitData.endDate = this.ganttForm.value.endDate.format("YYYY-MM-DD");
+    } else {
+      delete submitData.endDate;
+    }
+
+    if (submitData.duration) {
+      submitData.duration = [submitData.duration, "days"];
+    } else {
+      delete submitData.duration;
+    }
+
     console.log(submitData);
     this.ganttScreenService.postNewGanttRow(submitData);
   }

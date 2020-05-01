@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChange,
+  SimpleChanges,
+} from "@angular/core";
 import * as d3 from "d3";
 import * as moment from "moment";
 import {
@@ -17,7 +26,7 @@ import {
   templateUrl: "./chart.component.html",
   styleUrls: ["./chart.component.scss"],
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnChanges {
   @Input() chartDataRaw: Array<IGanttDataRaw>;
   @ViewChild("chart", { static: true }) private chartContainer: ElementRef<
     HTMLDivElement
@@ -473,11 +482,11 @@ export class ChartComponent implements OnInit {
     this.updateChartSVG(data, { minStartDate, maxEndDate });
   }
 
-  addMoreData() {
-    this.updateGanttChart();
-  }
-
-  ngOnInit() {
-    this.createGanttChart();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.chartDataRaw.firstChange) {
+      this.createGanttChart();
+    } else if (this.chartDataRaw.length) {
+      this.updateGanttChart();
+    }
   }
 }
