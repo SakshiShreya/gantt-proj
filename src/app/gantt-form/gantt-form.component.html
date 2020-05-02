@@ -1,11 +1,11 @@
 <form class="gantt-form" [formGroup]="ganttForm">
   <mat-form-field class="full-width">
-    <mat-label>Label</mat-label>
+    <mat-label>Label *</mat-label>
     <input matInput formControlName="label" />
   </mat-form-field>
 
   <mat-form-field class="full-width">
-    <mat-label>Start Date</mat-label>
+    <mat-label>Start Date *</mat-label>
     <input
       matInput
       [matDatepicker]="startDatePicker"
@@ -19,17 +19,7 @@
   </mat-form-field>
 
   <mat-form-field class="full-width">
-    <mat-label>End Date</mat-label>
-    <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" />
-    <mat-datepicker-toggle
-      matSuffix
-      [for]="endDatePicker"
-    ></mat-datepicker-toggle>
-    <mat-datepicker #endDatePicker></mat-datepicker>
-  </mat-form-field>
-
-  <mat-form-field class="full-width">
-    <mat-label>Duration</mat-label>
+    <mat-label>Duration *</mat-label>
     <input type="number" matInput formControlName="duration" />
   </mat-form-field>
 

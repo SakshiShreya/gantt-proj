@@ -9,6 +9,6 @@ export class GanttScreenService {
   }
 
   postNewGanttRow(data: IGanttDataRaw) {
-    this.fireStore.collection("gantt-data-test").add(data);
+    return this.fireStore.collection("gantt-data-test").add(data);
   }
 }

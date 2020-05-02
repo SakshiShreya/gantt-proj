@@ -12,10 +12,9 @@ export class GanttFormComponent implements OnChanges {
   @Input() chartDataRaw: Array<IGanttDataRaw>;
   ganttForm = new FormGroup({
     label: new FormControl("", Validators.required),
-    startDate: new FormControl(""),
-    duration: new FormControl(""),
-    endDate: new FormControl(),
-    dependsOn: new FormControl(),
+    startDate: new FormControl("", Validators.required),
+    duration: new FormControl(null, Validators.required),
+    dependsOn: new FormControl([]),
   });
   dependencyOptions: Array<ISelectOption>;
 
@@ -42,12 +41,6 @@ export class GanttFormComponent implements OnChanges {
       delete submitData.startDate;
     }
 
-    if (submitData.endDate) {
-      submitData.endDate = this.ganttForm.value.endDate.format("YYYY-MM-DD");
-    } else {
-      delete submitData.endDate;
-    }
-
     if (submitData.duration) {
       submitData.duration = [submitData.duration, "days"];
     } else {
@@ -55,6 +48,7 @@ export class GanttFormComponent implements OnChanges {
     }
 
     console.log(submitData);
-    this.ganttScreenService.postNewGanttRow(submitData);
+    this.ganttScreenService.postNewGanttRow(submitData).then(() => this.ganttForm.reset());
+
   }
 }
