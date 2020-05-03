@@ -30,10 +30,5 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- <mat-form-field class="full-width">
-    <mat-label>Depends On</mat-label>
-    <input matInput formControlName="dependsOn" />
-  </mat-form-field> -->
-
-  <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="ganttForm.invalid || isSubmitButtonDisable">Submit</button>
 </form>

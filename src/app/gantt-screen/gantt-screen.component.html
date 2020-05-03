@@ -1,2 +1,2 @@
-<app-gantt-form [chartDataRaw]="ganttData"></app-gantt-form>
+<button mat-raised-button color="primary" (click)="openDialog()">Add task</button>
 <app-chart *ngIf="ganttData.length" [chartDataRaw]="ganttData"></app-chart>
