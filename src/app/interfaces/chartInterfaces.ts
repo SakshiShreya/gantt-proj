@@ -45,11 +45,6 @@ export interface ICreateChartSVGOptions {
   maxEndDate: moment.Moment;
 }
 
-export interface IPolylineData {
-  points: string;
-  color: string;
-}
-
 export interface ICreateElementData {
   x: number;
   y: number;
