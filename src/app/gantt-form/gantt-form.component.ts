@@ -1,15 +1,15 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, Inject } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { IGanttDataRaw, ISelectOption } from "../interfaces/chartInterfaces";
 import { GanttScreenService } from "../gantt-screen/gantt-screen.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 
 @Component({
   selector: "app-gantt-form",
   templateUrl: "./gantt-form.component.html",
   styleUrls: ["./gantt-form.component.scss"],
 })
-export class GanttFormComponent implements OnChanges {
-  @Input() chartDataRaw: Array<IGanttDataRaw>;
+export class GanttFormComponent {
   ganttForm = new FormGroup({
     label: new FormControl("", Validators.required),
     startDate: new FormControl("", Validators.required),
@@ -17,20 +17,21 @@ export class GanttFormComponent implements OnChanges {
     dependsOn: new FormControl([]),
   });
   dependencyOptions: Array<ISelectOption>;
+  isSubmitButtonDisable = false;
 
-  constructor(private ganttScreenService: GanttScreenService) {}
-
-  ngOnChanges() {
-    if (this.chartDataRaw) {
-      this.dependencyOptions = this.chartDataRaw.map((rawData) => ({
-        value: rawData.id,
-        display: rawData.label,
-      }));
-      console.log("changes", this.chartDataRaw);
-    }
+  constructor(
+    private ganttScreenService: GanttScreenService,
+    public dialogRef: MatDialogRef<GanttFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Array<IGanttDataRaw>
+  ) {
+    this.dependencyOptions = data.map((rawData) => ({
+      value: rawData.id,
+      display: rawData.label,
+    }));
   }
 
   onSubmit() {
+    this.isSubmitButtonDisable = true;
     const submitData = { ...this.ganttForm.value };
 
     if (submitData.startDate) {
@@ -47,8 +48,8 @@ export class GanttFormComponent implements OnChanges {
       delete submitData.duration;
     }
 
-    console.log(submitData);
-    this.ganttScreenService.postNewGanttRow(submitData).then(() => this.ganttForm.reset());
-
+    this.ganttScreenService
+      .postNewGanttRow(submitData)
+      .then(() => this.dialogRef.close());
   }
 }

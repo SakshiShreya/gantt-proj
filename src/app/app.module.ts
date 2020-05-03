@@ -12,6 +12,7 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { environment } from "src/environments/environment";
 import { GanttScreenService } from "./gantt-screen/gantt-screen.service";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -29,7 +30,12 @@ import { GanttScreenService } from "./gantt-screen/gantt-screen.service";
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
   ],
-  providers: [GanttScreenService],
+  entryComponents: [GanttFormComponent],
+  providers: [
+    GanttScreenService,
+    { provide: MatDialogRef, useValue: {} },
+    { provide: MAT_DIALOG_DATA, useValue: [] },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
