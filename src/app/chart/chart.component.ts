@@ -1,11 +1,9 @@
 import {
   Component,
-  OnInit,
   ViewChild,
   ElementRef,
   Input,
   OnChanges,
-  SimpleChange,
   SimpleChanges,
 } from "@angular/core";
 import * as d3 from "d3";
@@ -17,7 +15,6 @@ import {
   ICreateChartSVGOptions,
   IGanttData,
   ESortMode,
-  IPolylineData,
   ICreateElementData,
 } from "../interfaces/chartInterfaces";
 
@@ -31,9 +28,10 @@ export class ChartComponent implements OnChanges {
   @ViewChild("chart", { static: true }) private chartContainer: ElementRef<
     HTMLDivElement
   >;
-  elementHeight = 20;
+  parsedData: Array<IGanttData> = [];
+  elementHeight = 24;
   // chartDimensionsHeight is set depending on data
-  chartDimensions: IDimensions = { width: 1200, height: 0 };
+  chartDimensions: IDimensions = { width: 1000, height: 0 };
   startDate = new Date("1 Jan 2020");
   endDate = new Date();
   fontSize = 12;
@@ -43,6 +41,7 @@ export class ChartComponent implements OnChanges {
   g1: d3.Selection<SVGGElement, unknown, null, undefined>;
   linesContainer: d3.Selection<SVGGElement, unknown, null, undefined>;
   barsContainer: d3.Selection<SVGGElement, unknown, null, undefined>;
+  gridContainer: d3.Selection<SVGGElement, unknown, null, undefined>;
   xAxisGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
   xScale: d3.ScaleTime<number, number>;
 
@@ -65,7 +64,7 @@ export class ChartComponent implements OnChanges {
     // Top scale is equal to margin top
     // 10 is the spacing between two bars
     this.chartDimensions.height =
-      this.chartDataRaw.length * (this.elementHeight + 10) +
+      this.chartDataRaw.length * (this.elementHeight * 1.5) +
       this.margin.top * 2;
   }
 
@@ -79,7 +78,16 @@ export class ChartComponent implements OnChanges {
     // create container for the data
     this.g1 = this.svg
       .append("g")
-      .attr("transform", `translate(${this.margin.left},${this.margin.top})`);
+      .attr("transform", `translate(${this.margin.left},${this.margin.top / 2})`);
+
+    this.gridContainer = this.g1
+      .append("g")
+      .attr(
+        "transform",
+        `translate(${-this.margin.left},${
+          this.margin.top - this.elementHeight / 4
+        })`
+      );
 
     this.linesContainer = this.g1
       .append("g")
@@ -105,12 +113,35 @@ export class ChartComponent implements OnChanges {
 
     this.xScale.domain([minStartDate.toDate(), maxEndDate.toDate()]);
     const xAxis = d3.axisBottom(this.xScale);
-    this.xAxisGroup.call(xAxis);
+    this.xAxisGroup.call((axis) => {
+      axis.call(xAxis);
+      axis
+        .selectAll("text")
+        .style("font-family", "Roboto, 'Helvetica Neue', sans-serif");
+      return xAxis(axis);
+    });
 
     // prepare data for every data element
     const rectangleData = this.createElementData(data, this.xScale);
+    const gridLineData = this.createGridLineData(data);
 
     // add stuff to the SVG
+    const gridLines = this.gridContainer.selectAll("line").data(gridLineData);
+
+    // remove old gridlines
+    gridLines.exit().remove();
+
+    // add new gridlines (there is no update gridline)
+    gridLines
+      .enter()
+      .append("line")
+      .attr("x1", 0)
+      .attr("x2", this.chartDimensions.width - this.margin.left)
+      .attr("y1", (d: number) => d)
+      .attr("y2", (d: number) => d)
+      .style("stroke", "rgba(0,0,0,0.12)")
+      .style("stroke-width", "1px");
+
     if (this.showRelations) {
       // create data describing connections' lines
       const polylineData: any = this.createPolylineData(rectangleData);
@@ -123,17 +154,15 @@ export class ChartComponent implements OnChanges {
       lines.exit().remove();
 
       // update lines
-      lines
-        .style("stroke", (d: IPolylineData) => d.color)
-        .attr("points", (d: IPolylineData) => d.points);
+      lines.style("stroke", "#ff4081").attr("points", (d: string) => d);
 
       // add new lines
       lines
         .enter()
         .append("polyline")
         .style("fill", "none")
-        .style("stroke", (d: IPolylineData) => d.color)
-        .attr("points", (d: IPolylineData) => d.points);
+        .style("stroke", "#ff4081")
+        .attr("points", (d: string) => d);
     }
 
     const bars = this.barsContainer.selectAll("g").data(rectangleData);
@@ -160,24 +189,32 @@ export class ChartComponent implements OnChanges {
 
     barGroup
       .append("rect")
-      .attr("rx", this.elementHeight / 2)
-      .attr("ry", this.elementHeight / 2)
+      .attr("rx", 4)
+      .attr("ry", 4)
       .attr("x", (d: any) => d.x)
       .attr("y", (d: any) => d.y)
       .attr("width", (d: any) => d.width)
       .attr("height", (d: any) => d.height)
-      .style("fill", "#ddd")
+      .style("fill", "#3f51b5")
       .style("stroke", "black");
 
     barGroup
       .append("text")
-      .style("fill", "black")
-      .style("font-family", "sans-serif")
+      .style("fill", "white")
+      .style("font-family", "Roboto, 'Helvetica Neue', sans-serif")
       .attr("x", (d: any) => d.labelX)
       .attr("y", (d: any) => d.labelY)
       .text((d: any) => d.label);
 
     bars.append("title").text((d: any) => d.tooltip);
+  }
+
+  createGridLineData(data: Array<IGanttData>) {
+    const gridLineData = data.map((d, i) => i * this.elementHeight * 1.5);
+    gridLineData.push(
+      gridLineData[gridLineData.length - 1] + this.elementHeight * 1.5
+    );
+    return gridLineData;
   }
 
   createElementData(
@@ -244,12 +281,6 @@ export class ChartComponent implements OnChanges {
       d.dependsOn
         .map((parentId) => cachedData[parentId])
         .map((parent) => {
-          const a = Math.min(0.9, Math.random());
-          const color =
-            "#" +
-            // tslint:disable-next-line: no-bitwise
-            ((Math.max(0.1, a) * 0xfff) << 0).toString(16);
-
           // increase the amount rows occupied by both parent and current element (d)
           storedConnections[parent.id]++;
           storedConnections[d.id]++;
@@ -274,10 +305,7 @@ export class ChartComponent implements OnChanges {
             parent.y + this.elementHeight / 2,
           ];
 
-          return {
-            points: points.join(","),
-            color,
-          };
+          return points.join(",");
         })
     );
   }
@@ -437,16 +465,16 @@ export class ChartComponent implements OnChanges {
     };
   }
 
-  createGanttChart = () => {
+  updateGanttChart(action: "create" | "update") {
     this.changeChartDimensionsHeight();
 
     // transform raw user data to valid values
     // calculate startDate and endDate based on duration
     // id dependsOn is undefined, then dependsOn=[]
-    let data = this.parseUserData(this.chartDataRaw);
+    const data = this.parseUserData(this.chartDataRaw);
 
     // sort the data
-    data = this.sortElements(data, this.sortMode);
+    this.parsedData = this.sortElements(data, this.sortMode);
 
     // find min start date and max end date from all data points
     const { minStartDate, maxEndDate } = this.findDateBoundaries(data);
@@ -455,38 +483,21 @@ export class ChartComponent implements OnChanges {
     minStartDate.subtract(2, "days");
     maxEndDate.add(2, "days");
 
-    this.createChartSVG(data, {
-      minStartDate,
-      maxEndDate,
-    });
-  };
-
-  updateGanttChart() {
-    this.changeChartDimensionsHeight();
-
-    // transform raw user data to valid values
-    // calculate startDate and endDate based on duration
-    // id dependsOn is undefined, then dependsOn=[]
-    let data = this.parseUserData(this.chartDataRaw);
-
-    // sort the data
-    data = this.sortElements(data, this.sortMode);
-
-    // find min start date and max end date from all data points
-    const { minStartDate, maxEndDate } = this.findDateBoundaries(data);
-
-    // add some padding to axes
-    minStartDate.subtract(2, "days");
-    maxEndDate.add(2, "days");
-
-    this.updateChartSVG(data, { minStartDate, maxEndDate });
+    if (action === "create") {
+      this.createChartSVG(data, {
+        minStartDate,
+        maxEndDate,
+      });
+    } else {
+      this.updateChartSVG(data, { minStartDate, maxEndDate });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.chartDataRaw.firstChange) {
-      this.createGanttChart();
+      this.updateGanttChart("create");
     } else if (this.chartDataRaw.length) {
-      this.updateGanttChart();
+      this.updateGanttChart("update");
     }
   }
 }
