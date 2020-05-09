@@ -28,9 +28,10 @@ export class ChartComponent implements OnChanges {
   @ViewChild("chart", { static: true }) private chartContainer: ElementRef<
     HTMLDivElement
   >;
+  parsedData: Array<IGanttData> = [];
   elementHeight = 24;
   // chartDimensionsHeight is set depending on data
-  chartDimensions: IDimensions = { width: 1200, height: 0 };
+  chartDimensions: IDimensions = { width: 1000, height: 0 };
   startDate = new Date("1 Jan 2020");
   endDate = new Date();
   fontSize = 12;
@@ -77,7 +78,7 @@ export class ChartComponent implements OnChanges {
     // create container for the data
     this.g1 = this.svg
       .append("g")
-      .attr("transform", `translate(${this.margin.left},${this.margin.top})`);
+      .attr("transform", `translate(${this.margin.left},${this.margin.top / 2})`);
 
     this.gridContainer = this.g1
       .append("g")
@@ -138,7 +139,7 @@ export class ChartComponent implements OnChanges {
       .attr("x2", this.chartDimensions.width - this.margin.left)
       .attr("y1", (d: number) => d)
       .attr("y2", (d: number) => d)
-      .style("stroke", "#e0e0e0")
+      .style("stroke", "rgba(0,0,0,0.12)")
       .style("stroke-width", "1px");
 
     if (this.showRelations) {
@@ -464,16 +465,16 @@ export class ChartComponent implements OnChanges {
     };
   }
 
-  createGanttChart = () => {
+  updateGanttChart(action: "create" | "update") {
     this.changeChartDimensionsHeight();
 
     // transform raw user data to valid values
     // calculate startDate and endDate based on duration
     // id dependsOn is undefined, then dependsOn=[]
-    let data = this.parseUserData(this.chartDataRaw);
+    const data = this.parseUserData(this.chartDataRaw);
 
     // sort the data
-    data = this.sortElements(data, this.sortMode);
+    this.parsedData = this.sortElements(data, this.sortMode);
 
     // find min start date and max end date from all data points
     const { minStartDate, maxEndDate } = this.findDateBoundaries(data);
@@ -482,38 +483,21 @@ export class ChartComponent implements OnChanges {
     minStartDate.subtract(2, "days");
     maxEndDate.add(2, "days");
 
-    this.createChartSVG(data, {
-      minStartDate,
-      maxEndDate,
-    });
-  };
-
-  updateGanttChart() {
-    this.changeChartDimensionsHeight();
-
-    // transform raw user data to valid values
-    // calculate startDate and endDate based on duration
-    // id dependsOn is undefined, then dependsOn=[]
-    let data = this.parseUserData(this.chartDataRaw);
-
-    // sort the data
-    data = this.sortElements(data, this.sortMode);
-
-    // find min start date and max end date from all data points
-    const { minStartDate, maxEndDate } = this.findDateBoundaries(data);
-
-    // add some padding to axes
-    minStartDate.subtract(2, "days");
-    maxEndDate.add(2, "days");
-
-    this.updateChartSVG(data, { minStartDate, maxEndDate });
+    if (action === "create") {
+      this.createChartSVG(data, {
+        minStartDate,
+        maxEndDate,
+      });
+    } else {
+      this.updateChartSVG(data, { minStartDate, maxEndDate });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.chartDataRaw.firstChange) {
-      this.createGanttChart();
+      this.updateGanttChart("create");
     } else if (this.chartDataRaw.length) {
-      this.updateGanttChart();
+      this.updateGanttChart("update");
     }
   }
 }

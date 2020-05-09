@@ -1,1 +1,20 @@
+<div class="gantt-table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Duration</th>
+        <th>Start date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of parsedData">
+        <td>{{ row.label }}</td>
+        <td>{{ row.duration.join(" ") }}</td>
+        <td>{{ row.startDate.format("DD MMM, YYYY") }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <div class="d3-chart" #chart></div>
