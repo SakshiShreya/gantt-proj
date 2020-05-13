@@ -1,0 +1,10 @@
+<div class="confirmation-cont" *ngIf="data.state == states.CANT_DELETE">
+  <p>Can't delete. {{ data.row.label }} has {{ data.dependents.length }} dependents.</p>
+  <button mat-raised-button color="primary" (click)="closePopup()">Ok</button>
+</div>
+
+<div class="confirmation-cont" *ngIf="data.state == states.CONFIRM">
+  <p>Are you sure you want to delete {{ data.row.label }}?</p>
+  <button mat-raised-button color="primary" (click)="deleteRow()">Yes</button>
+  <button mat-raised-button color="primary" (click)="closePopup()">No</button>
+</div>

@@ -15,10 +15,13 @@ export class GanttScreenService {
   }
 
   updateGanttRow(data: IGanttDataRaw, id: string) {
-    console.log(data, id);
     return this.fireStore
       .collection("gantt-data-test")
       .doc(id)
       .set(data, { merge: true });
+  }
+
+  deleteGanttRow(id: string) {
+    return this.fireStore.collection("gantt-data-test").doc(id).delete();
   }
 }
