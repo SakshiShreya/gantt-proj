@@ -28,7 +28,6 @@
   }
 
   td {
-    padding: 0 10px;
     height: 36px;
   }
 
@@ -39,4 +38,10 @@
 
 .d3-chart {
   overflow-x: auto;
+}
+
+::ng-deep .mat-icon-button {
+  height: auto;
+  line-height: 33px;
+  width: 33px;
 }

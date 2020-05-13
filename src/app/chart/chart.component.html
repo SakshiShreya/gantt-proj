@@ -2,6 +2,7 @@
   <table>
     <thead>
       <tr>
+        <th></th>
         <th>Name</th>
         <th>Duration</th>
         <th>Start date</th>
@@ -9,6 +10,11 @@
     </thead>
     <tbody>
       <tr *ngFor="let row of parsedData">
+        <td (click)="openForm(row)">
+          <button mat-icon-button color="accent">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
         <td>{{ row.label }}</td>
         <td>{{ row.duration.join(" ") }}</td>
         <td>{{ row.startDate.format("DD MMM, YYYY") }}</td>

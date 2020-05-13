@@ -5,6 +5,7 @@ import {
   MatButtonModule,
   MatSelectModule,
   MatDialogModule,
+  MatIconModule,
 } from "@angular/material";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 
@@ -16,6 +17,7 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
     MatButtonModule,
     MatSelectModule,
     MatDialogModule,
+    MatIconModule,
   ],
 })
 export class AppMaterialModule {}
