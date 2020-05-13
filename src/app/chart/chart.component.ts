@@ -17,6 +17,8 @@ import {
   ESortMode,
   ICreateElementData,
 } from "../interfaces/chartInterfaces";
+import { MatDialog } from "@angular/material";
+import { GanttFormComponent } from "../gantt-form/gantt-form.component";
 
 @Component({
   selector: "app-chart",
@@ -58,6 +60,10 @@ export class ChartComponent implements OnChanges {
       height: this.chartDimensions.width - this.margin.top * 2,
     };
   }
+
+  constructor(
+    public dialog: MatDialog
+  ) {}
 
   changeChartDimensionsHeight() {
     // add space for top margin and top scale
@@ -499,5 +505,14 @@ export class ChartComponent implements OnChanges {
     } else if (this.chartDataRaw.length) {
       this.updateGanttChart("update");
     }
+  }
+
+  openForm(row: IGanttData) {
+    const dialogRef = this.dialog.open(GanttFormComponent, {
+      width: "50%",
+      minWidth: "300px",
+      maxWidth: "550px",
+      data: {dependencyDropdown: this.parsedData, row},
+    });
   }
 }
