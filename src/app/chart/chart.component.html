@@ -3,6 +3,7 @@
     <thead>
       <tr>
         <th></th>
+        <th></th>
         <th>Name</th>
         <th>Duration</th>
         <th>Start date</th>
@@ -13,6 +14,11 @@
         <td (click)="openForm(row)">
           <button mat-icon-button color="accent">
             <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+        <td (click)="deleteRow(row)">
+          <button mat-icon-button color="accent">
+            <mat-icon>delete</mat-icon>
           </button>
         </td>
         <td>{{ row.label }}</td>

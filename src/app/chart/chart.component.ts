@@ -19,6 +19,10 @@ import {
 } from "../interfaces/chartInterfaces";
 import { MatDialog } from "@angular/material";
 import { GanttFormComponent } from "../gantt-form/gantt-form.component";
+import {
+  ConfirmDeleteComponent,
+  eConfirmState,
+} from "./confirm-delete/confirm-delete.component";
 
 @Component({
   selector: "app-chart",
@@ -61,9 +65,7 @@ export class ChartComponent implements OnChanges {
     };
   }
 
-  constructor(
-    public dialog: MatDialog
-  ) {}
+  constructor(public dialog: MatDialog) {}
 
   changeChartDimensionsHeight() {
     // add space for top margin and top scale
@@ -84,7 +86,10 @@ export class ChartComponent implements OnChanges {
     // create container for the data
     this.g1 = this.svg
       .append("g")
-      .attr("transform", `translate(${this.margin.left},${this.margin.top / 2})`);
+      .attr(
+        "transform",
+        `translate(${this.margin.left},${this.margin.top / 2})`
+      );
 
     this.gridContainer = this.g1
       .append("g")
@@ -508,11 +513,33 @@ export class ChartComponent implements OnChanges {
   }
 
   openForm(row: IGanttData) {
-    const dialogRef = this.dialog.open(GanttFormComponent, {
+    this.dialog.open(GanttFormComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
-      data: {dependencyDropdown: this.parsedData, row},
+      data: { dependencyDropdown: this.parsedData, row },
+    });
+  }
+
+  deleteRow(row: IGanttData) {
+    let state: eConfirmState;
+
+    // check if any row depends on this row
+    const dependents = this.parsedData.filter((data) =>
+      data.dependsOn.includes(row.id)
+    );
+    if (dependents.length) {
+      // row has dependents
+      state = eConfirmState.CANT_DELETE;
+    } else {
+      state = eConfirmState.CONFIRM;
+    }
+
+    this.dialog.open(ConfirmDeleteComponent, {
+      width: "50%",
+      minWidth: "300px",
+      maxWidth: "550px",
+      data: { row, state, dependents },
     });
   }
 }

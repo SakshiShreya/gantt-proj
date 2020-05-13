@@ -13,6 +13,7 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { environment } from "src/environments/environment";
 import { GanttScreenService } from "./gantt-screen/gantt-screen.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { ConfirmDeleteComponent } from "./chart/confirm-delete/confirm-delete.component";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
     ChartComponent,
     GanttScreenComponent,
     GanttFormComponent,
+    ConfirmDeleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,7 +32,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
   ],
-  entryComponents: [GanttFormComponent],
+  entryComponents: [GanttFormComponent, ConfirmDeleteComponent],
   providers: [
     GanttScreenService,
     { provide: MatDialogRef, useValue: {} },
