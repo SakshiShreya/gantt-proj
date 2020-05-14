@@ -2,28 +2,34 @@
   <table>
     <thead>
       <tr>
-        <th></th>
-        <th></th>
-        <th>Name</th>
-        <th>Duration</th>
+        <th class="icon"></th>
+        <th class="icon"></th>
+        <th>Task</th>
+        <th>Owner</th>
         <th>Start date</th>
+        <th>End date</th>
+        <th>Duration</th>
+        <th>Percent Complete</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let row of parsedData">
-        <td (click)="openForm(row)">
+        <td class="icon" (click)="openForm(row)">
           <button mat-icon-button color="accent">
             <mat-icon>edit</mat-icon>
           </button>
         </td>
-        <td (click)="deleteRow(row)">
+        <td class="icon" (click)="deleteRow(row)">
           <button mat-icon-button color="accent">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
         <td>{{ row.label }}</td>
-        <td>{{ row.duration.join(" ") }}</td>
+        <td>{{ row.owner }}</td>
         <td>{{ row.startDate.format("DD MMM, YYYY") }}</td>
+        <td>{{ row.endDate.format("DD MMM, YYYY") }}</td>
+        <td>{{ row.duration.join(" ") }}</td>
+        <td>{{ row.percentComplete }}</td>
       </tr>
     </tbody>
   </table>

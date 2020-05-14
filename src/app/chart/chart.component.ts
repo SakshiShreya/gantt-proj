@@ -322,12 +322,11 @@ export class ChartComponent implements OnChanges {
   }
 
   prepareDataElement({
-    id,
-    label,
     startDate: startDateRaw,
     endDate: endDateRaw,
     duration,
     dependsOn,
+    ...ganttDataRaw
   }: IGanttDataRaw): IGanttData {
     // calculate startDate and endDate
     if ((!startDateRaw || !endDateRaw) && !duration) {
@@ -361,12 +360,11 @@ export class ChartComponent implements OnChanges {
     }
 
     return {
-      id,
-      label,
       startDate,
       endDate,
       duration,
       dependsOn,
+      ...ganttDataRaw,
     };
   }
 
@@ -517,6 +515,7 @@ export class ChartComponent implements OnChanges {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
+      maxHeight: "100vh",
       data: { dependencyDropdown: this.parsedData, row },
     });
   }
@@ -539,7 +538,8 @@ export class ChartComponent implements OnChanges {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
-      data: { row, state, dependents },
+      maxHeight: "100vh",
+      data: { dependencyDropdown: this.parsedData, row },
     });
   }
 }
