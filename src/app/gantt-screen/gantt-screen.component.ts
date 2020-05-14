@@ -27,10 +27,11 @@ export class GanttScreenComponent implements OnInit {
   }
 
   openForm() {
-    const dialogRef = this.dialog.open(GanttFormComponent, {
+    this.dialog.open(GanttFormComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
+      maxHeight: "100vh",
       data: { dependencyDropdown: this.ganttData },
     });
   }

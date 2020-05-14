@@ -5,7 +5,9 @@ export interface IGanttDataRaw {
   duration?: [moment.DurationInputArg1, moment.DurationInputArg2];
   endDate?: string;
   label: string;
+  owner: string;
   id: string;
+  percentComplete: number;
   dependsOn: Array<string>;
 }
 
@@ -14,7 +16,9 @@ export interface IGanttData {
   duration?: [moment.DurationInputArg1, moment.DurationInputArg2];
   endDate?: moment.Moment;
   label: string;
+  owner: string;
   id: string;
+  percentComplete: number;
   dependsOn: Array<string>;
 }
 

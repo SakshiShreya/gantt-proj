@@ -12,8 +12,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 export class GanttFormComponent implements OnInit {
   ganttForm = new FormGroup({
     label: new FormControl("", Validators.required),
+    owner: new FormControl("", Validators.required),
     startDate: new FormControl("", Validators.required),
     duration: new FormControl(null, Validators.required),
+    percentComplete: new FormControl(0, Validators.required),
     dependsOn: new FormControl([]),
   });
   dependencyOptions: Array<ISelectOption>;
@@ -38,8 +40,10 @@ export class GanttFormComponent implements OnInit {
     if (this.data.row) {
       this.ganttForm.setValue({
         label: this.data.row.label,
+        owner: this.data.row.owner,
         startDate: this.data.row.startDate,
         duration: this.data.row.duration[0],
+        percentComplete: this.data.row.percentComplete || 0,
         dependsOn: this.data.row.dependsOn,
       });
     }
