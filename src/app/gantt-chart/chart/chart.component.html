@@ -1,0 +1,43 @@
+<div class="mat-elevation-z1 chart-container">
+  <div class="gantt-table-container">
+    <table>
+      <thead>
+        <tr>
+          <th class="icon"></th>
+          <th>Task</th>
+          <th>Owner</th>
+          <th>Start date</th>
+          <th>End date</th>
+          <th>Duration</th>
+          <th>% Complete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of chartDataRaw">
+          <td class="icon">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="editTask(row)">Edit</button>
+              <button mat-menu-item (click)="addSubTask(row)">
+                Add sub-task
+              </button>
+              <button mat-menu-item (click)="deleteTask(row)" color="warn">
+                Delete
+              </button>
+            </mat-menu>
+          </td>
+          <td>{{ row.name }}</td>
+          <td>{{ row.owner }}</td>
+          <td>{{ row.startDate?.format("DD MMM, YYYY") }}</td>
+          <td>{{ row.endDate?.format("DD MMM, YYYY") }}</td>
+          <td>{{ row.duration?.join(" ") }}</td>
+          <td>{{ row.percentComplete }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="chart"></div>
+</div>

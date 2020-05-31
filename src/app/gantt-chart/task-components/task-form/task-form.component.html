@@ -1,0 +1,15 @@
+<form class="gantt-form" [formGroup]="taskForm">
+  <mat-form-field class="full-width">
+    <mat-label>Name *</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="taskForm.invalid || isSubmitButtonDisable"
+  >
+    Submit
+  </button>
+</form>

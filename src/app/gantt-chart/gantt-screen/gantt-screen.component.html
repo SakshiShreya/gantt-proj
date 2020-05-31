@@ -1,0 +1,8 @@
+<mat-card>
+  <h1>{{ projData.name }}</h1>
+
+  <button mat-raised-button color="primary" (click)="openForm()">
+    Add task
+  </button>
+  <app-chart *ngIf="ganttData.length" [chartDataRaw]="ganttData"></app-chart>
+</mat-card>
