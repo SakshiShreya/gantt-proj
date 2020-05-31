@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { GanttScreenService } from "../../gantt-screen/gantt-screen.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { ITask, ISubTask } from "../../interfaces/chartInterfaces";
+import { ITaskRaw } from "../../interfaces/chartInterfaces";
+import * as moment from "moment";
 
 @Component({
   selector: "app-subtask-form",
@@ -10,8 +11,12 @@ import { ITask, ISubTask } from "../../interfaces/chartInterfaces";
   styleUrls: ["./subtask-form.component.scss"],
 })
 export class SubtaskFormComponent implements OnInit {
-  subTaskForm = new FormGroup({
+  subtaskForm = new FormGroup({
     name: new FormControl("", Validators.required),
+    owner: new FormControl("", Validators.required),
+    startDate: new FormControl("", Validators.required),
+    duration: new FormControl(null, Validators.required),
+    percentComplete: new FormControl(0, Validators.required),
   });
   isSubmitButtonDisable = false;
   projId = "GiJfbLcXDAfSXpv9ndac";
@@ -19,33 +24,46 @@ export class SubtaskFormComponent implements OnInit {
   constructor(
     private ganttScreenService: GanttScreenService,
     public dialogRef: MatDialogRef<SubtaskFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { parent: ITask; subTaskId?: number }
+    @Inject(MAT_DIALOG_DATA) public data: { parent: ITaskRaw; subtaskId?: number }
   ) {}
 
   ngOnInit() {
-    if (this.data.subTaskId) {
-      this.subTaskForm.setValue({
-        name: this.data.parent.subTasks[this.data.subTaskId].name,
+    if (this.data.subtaskId !== undefined) {
+      this.subtaskForm.patchValue({
+        name: this.data.parent.subtasks[this.data.subtaskId].name,
+        owner: this.data.parent.subtasks[this.data.subtaskId].owner,
+        startDate: moment(this.data.parent.subtasks[this.data.subtaskId].startDate),
+        duration: this.data.parent.subtasks[this.data.subtaskId].duration
+          ? this.data.parent.subtasks[this.data.subtaskId].duration[0]
+          : 0,
+        percentComplete:
+          this.data.parent.subtasks[this.data.subtaskId].percentComplete || 0,
       });
     }
   }
 
   onSubmit() {
     this.isSubmitButtonDisable = true;
-    const submitData = { ...this.subTaskForm.value };
+    const submitData = { ...this.subtaskForm.value };
 
-    if (this.data.subTaskId) {
+    submitData.startDate = this.subtaskForm.value.startDate.format(
+      "YYYY-MM-DD"
+    );
+
+    submitData.duration = [submitData.duration, "days"];
+
+    if (this.data.subtaskId !== undefined) {
       this.ganttScreenService
-        .updateSubTask(
+        .updateSubtask(
           this.projId,
           this.data.parent,
-          this.data.subTaskId,
+          this.data.subtaskId,
           submitData
         )
         .then(() => this.dialogRef.close());
     } else {
       this.ganttScreenService
-        .postNewSubTask(this.projId, this.data.parent.id, submitData)
+        .postNewSubtask(this.projId, this.data.parent.id, submitData)
         .then(() => this.dialogRef.close());
     }
   }

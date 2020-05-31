@@ -1,14 +1,43 @@
-<form class="gantt-form" [formGroup]="subTaskForm">
+<form class="gantt-form" [formGroup]="subtaskForm">
   <mat-form-field class="full-width">
     <mat-label>Name *</mat-label>
     <input matInput formControlName="name" />
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Owner *</mat-label>
+    <input matInput formControlName="owner" />
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Start Date *</mat-label>
+    <input
+      matInput
+      [matDatepicker]="startDatePicker"
+      formControlName="startDate"
+    />
+    <mat-datepicker-toggle
+      matSuffix
+      [for]="startDatePicker"
+    ></mat-datepicker-toggle>
+    <mat-datepicker #startDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Duration *</mat-label>
+    <input type="number" matInput formControlName="duration" />
+  </mat-form-field>
+  
+  <mat-form-field class="full-width">
+    <mat-label>Percent Complete *</mat-label>
+    <input type="number" matInput formControlName="percentComplete" />
   </mat-form-field>
 
   <button
     mat-raised-button
     color="primary"
     (click)="onSubmit()"
-    [disabled]="subTaskForm.invalid || isSubmitButtonDisable"
+    [disabled]="subtaskForm.invalid || isSubmitButtonDisable"
   >
     Submit
   </button>

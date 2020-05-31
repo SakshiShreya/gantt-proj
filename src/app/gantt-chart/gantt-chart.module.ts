@@ -9,6 +9,7 @@ import { TaskFormComponent } from "./task-components/task-form/task-form.compone
 import { ReactiveFormsModule } from "@angular/forms";
 import { SubtaskFormComponent } from "./subtask-components/subtask-form/subtask-form.component";
 import { DeleteTaskComponent } from "./task-components/delete-task/delete-task.component";
+import { DeleteSubtaskComponent } from "./subtask-components/delete-subtask/delete-subtask.component";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { DeleteTaskComponent } from "./task-components/delete-task/delete-task.c
     ChartComponent,
     TaskFormComponent,
     SubtaskFormComponent,
-    DeleteTaskComponent
+    DeleteTaskComponent,
+    DeleteSubtaskComponent
   ],
   imports: [
     CommonModule,
@@ -25,6 +27,6 @@ import { DeleteTaskComponent } from "./task-components/delete-task/delete-task.c
     AppMaterialModule,
   ],
   providers: [GanttScreenService],
-  entryComponents: [TaskFormComponent, SubtaskFormComponent, DeleteTaskComponent],
+  entryComponents: [TaskFormComponent, SubtaskFormComponent, DeleteTaskComponent, DeleteSubtaskComponent],
 })
 export class GanttChartModule {}

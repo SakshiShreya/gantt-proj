@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SubtaskFormComponent } from "./subtask-form.component";
+import { DeleteSubtaskComponent } from "./delete-subtask.component";
 
-describe("SubtaskFormComponent", () => {
-  let component: SubtaskFormComponent;
-  let fixture: ComponentFixture<SubtaskFormComponent>;
+describe("DeleteTaskComponent", () => {
+  let component: DeleteSubtaskComponent;
+  let fixture: ComponentFixture<DeleteSubtaskComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SubtaskFormComponent],
+      declarations: [DeleteSubtaskComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubtaskFormComponent);
+    fixture = TestBed.createComponent(DeleteSubtaskComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

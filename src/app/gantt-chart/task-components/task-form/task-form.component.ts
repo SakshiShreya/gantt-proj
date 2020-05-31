@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { GanttScreenService } from "../../gantt-screen/gantt-screen.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { ITask } from "../../interfaces/chartInterfaces";
+import { ITaskRaw } from "../../interfaces/chartInterfaces";
 
 @Component({
   selector: "app-task-form",
@@ -19,7 +19,7 @@ export class TaskFormComponent implements OnInit {
   constructor(
     private ganttScreenService: GanttScreenService,
     public dialogRef: MatDialogRef<TaskFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { row?: ITask }
+    @Inject(MAT_DIALOG_DATA) public data: { row?: ITaskRaw }
   ) {}
 
   ngOnInit() {

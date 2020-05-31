@@ -1,4 +1,4 @@
-import { IProj, ITask, ISubTask } from "../interfaces/chartInterfaces";
+import { IProj, ITaskRaw, ISubtaskRaw } from "../interfaces/chartInterfaces";
 import { AngularFirestore } from "@angular/fire/firestore";
 import * as firebase from "firebase/app";
 
@@ -16,7 +16,7 @@ export class GanttScreenService {
     return this.fireStore
       .collection("gantt-data")
       .doc(projId)
-      .collection<ITask>("Tasks")
+      .collection<ITaskRaw>("Tasks")
       .snapshotChanges();
   }
 
@@ -24,7 +24,7 @@ export class GanttScreenService {
     return this.fireStore.collection("gantt-data").add(projData);
   }
 
-  postNewTask(projId: string, taskData: ITask) {
+  postNewTask(projId: string, taskData: ITaskRaw) {
     return this.fireStore
       .collection("gantt-data")
       .doc(projId)
@@ -32,18 +32,18 @@ export class GanttScreenService {
       .add(taskData);
   }
 
-  postNewSubTask(projId: string, taskId: string, subTaskData: ISubTask) {
+  postNewSubtask(projId: string, taskId: string, subtaskData: ISubtaskRaw) {
     return this.fireStore
       .collection("gantt-data")
       .doc(projId)
       .collection("Tasks")
       .doc(taskId)
       .update({
-        subTasks: firebase.firestore.FieldValue.arrayUnion(subTaskData),
+        subtasks: firebase.firestore.FieldValue.arrayUnion(subtaskData),
       });
   }
 
-  updateTask(projId: string, taskId: string, taskData: ITask) {
+  updateTask(projId: string, taskId: string, taskData: ITaskRaw) {
     return this.fireStore
       .collection("gantt-data")
       .doc(projId)
@@ -52,21 +52,23 @@ export class GanttScreenService {
       .set(taskData, { merge: true });
   }
 
-  updateSubTask(
+  updateSubtask(
     projId: string,
-    taskData: ITask,
-    subTaskId: number,
-    subTaskData: ISubTask
+    taskData: ITaskRaw,
+    subtaskId: number,
+    subtaskData: ISubtaskRaw
   ) {
-    const subTask = [...taskData.subTasks];
-    subTask[subTaskId] = subTaskData;
+    // copy the task list
+    const subtasks = [...taskData.subtasks];
+    // update the subtask that we want to change
+    subtasks[subtaskId] = subtaskData;
 
     return this.fireStore
       .collection("gantt-data")
       .doc(projId)
       .collection("Tasks")
       .doc(taskData.id)
-      .set({ subTask }, { merge: true });
+      .update({ subtasks });
   }
 
   deleteTask(projId: string, taskId: string) {
@@ -76,5 +78,19 @@ export class GanttScreenService {
       .collection("Tasks")
       .doc(taskId)
       .delete();
+  }
+
+  deleteSubtask(projId: string, taskData: ITaskRaw, subtaskId: number) {
+    // copy the task list
+    const subtasks = [...taskData.subtasks];
+    // remove the subtask that we want to delete
+    subtasks.splice(subtaskId, 1);
+
+    return this.fireStore
+      .collection("gantt-data")
+      .doc(projId)
+      .collection("Tasks")
+      .doc(taskData.id)
+      .update({ subtasks });
   }
 }

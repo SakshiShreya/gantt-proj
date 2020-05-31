@@ -13,28 +13,53 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of chartDataRaw">
-          <td class="icon">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="editTask(row)">Edit</button>
-              <button mat-menu-item (click)="addSubTask(row)">
-                Add sub-task
+        <ng-template ngFor let-task [ngForOf]="chartData" let-taskId="index">
+          <tr class="task">
+            <td class="icon">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
               </button>
-              <button mat-menu-item (click)="deleteTask(row)" color="warn">
-                Delete
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="editTask(task)">Edit</button>
+                <button mat-menu-item (click)="addSubtask(task)">
+                  Add sub-task
+                </button>
+                <button mat-menu-item (click)="deleteTask(task)" color="warn">
+                  Delete
+                </button>
+              </mat-menu>
+            </td>
+            <td colspan="6">{{ task.name }}</td>
+          </tr>
+          <tr *ngFor="let subtask of task.subtasks; let id = index" class="subtask">
+            <td class="icon">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
               </button>
-            </mat-menu>
-          </td>
-          <td>{{ row.name }}</td>
-          <td>{{ row.owner }}</td>
-          <td>{{ row.startDate?.format("DD MMM, YYYY") }}</td>
-          <td>{{ row.endDate?.format("DD MMM, YYYY") }}</td>
-          <td>{{ row.duration?.join(" ") }}</td>
-          <td>{{ row.percentComplete }}</td>
-        </tr>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="editSubtask(taskId, id)">
+                  Edit
+                </button>
+                <button
+                  mat-menu-item
+                  (click)="deleteSubtask(taskId, id)"
+                  color="warn"
+                >
+                  Delete
+                </button>
+              </mat-menu>
+            </td>
+            <td>
+              <div class="indent"></div>
+              {{ subtask.name }}
+            </td>
+            <td>{{ subtask.owner }}</td>
+            <td>{{ subtask.startDate?.format("DD MMM, YYYY") }}</td>
+            <td>{{ subtask.endDate?.format("DD MMM, YYYY") }}</td>
+            <td>{{ subtask.duration?.join(" ") }}</td>
+            <td>{{ subtask.percentComplete }}</td>
+          </tr>
+        </ng-template>
       </tbody>
     </table>
   </div>
