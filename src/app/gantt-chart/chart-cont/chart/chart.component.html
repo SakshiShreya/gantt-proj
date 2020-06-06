@@ -1,0 +1,32 @@
+<div class="chart">
+  <ul>
+    <li class="heading" [ngStyle]="{ 'width.px': dates.length * colWidth }">
+      <div class="date-col" *ngFor="let date of dates">
+        {{ date.format("DD MMM") }}
+      </div>
+    </li>
+  </ul>
+  <ul>
+    <ng-template ngFor let-task [ngForOf]="chartData" let-taskId="index">
+      <li class="task" [ngStyle]="{ 'width.px': dates.length * colWidth }">
+        <div class="date-col" *ngFor="let date of dates"></div>
+      </li>
+      <li
+        *ngFor="let subtask of task.subtasks; let id = index"
+        class="subtask"
+        [ngStyle]="{ 'width.px': dates.length * colWidth }"
+      >
+        <div class="date-col" *ngFor="let date of dates"></div>
+        <div
+          class="subtask-bar blue"
+          [ngStyle]="{
+            'left.px': subtask.left * colWidth,
+            'width.px': (subtask.duration[0] + 1) * colWidth
+          }"
+        >
+          <label class="name">{{ subtask.name }}</label>
+        </div>
+      </li>
+    </ng-template>
+  </ul>
+</div>

@@ -31,7 +31,6 @@ export class GanttScreenComponent implements OnInit {
           id: item.payload.doc.id,
           ...item.payload.doc.data(),
         }));
-        console.log(this.ganttDataRaw);
       });
   }
 

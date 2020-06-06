@@ -4,9 +4,9 @@ import { GanttScreenComponent } from "./gantt-screen/gantt-screen.component";
 import { PreloadAllModules } from "@angular/router";
 
 const routes: Routes = [
-  { path: "chart", component: GanttScreenComponent },
+  { path: "chart1", component: GanttScreenComponent },
   {
-    path: "chart1",
+    path: "chart",
     loadChildren: () =>
       import("./gantt-chart/gantt-chart.module").then(
         (m) => m.GanttChartModule

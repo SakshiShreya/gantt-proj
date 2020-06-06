@@ -4,33 +4,42 @@ export interface IProj {
   name: string;
 }
 
-export interface ITaskRaw {
+interface IChartExtra {
+  left: number;
+}
+
+interface ITaskBase {
   name: string;
   id?: string;
+}
+
+export interface ITaskRaw extends ITaskBase {
   subtasks?: Array<ISubtaskRaw>;
 }
 
-export interface ITask {
-  name: string;
-  id?: string;
+export interface ITask extends ITaskBase {
   subtasks?: Array<ISubtask>;
 }
 
-export interface ISubtaskRaw {
+export interface ITaskChart extends ITaskBase, IChartExtra {
+  subtasks?: Array<ISubtaskChart>;
+}
+
+interface ISubtaskBase {
   name: string;
   id?: string;
   owner: string;
-  startDate: string;
   duration: [moment.DurationInputArg1, moment.DurationInputArg2];
   percentComplete: number;
 }
 
-export interface ISubtask {
-  name: string;
-  id?: string;
-  owner: string;
-  startDate: moment.Moment;
-  duration: [moment.DurationInputArg1, moment.DurationInputArg2];
-  endDate: moment.Moment;
-  percentComplete: number;
+export interface ISubtaskRaw extends ISubtaskBase {
+  startDate: string;
 }
+
+export interface ISubtask extends ISubtaskBase {
+  startDate: moment.Moment;
+  endDate: moment.Moment;
+}
+
+export interface ISubtaskChart extends ISubtask, IChartExtra {}

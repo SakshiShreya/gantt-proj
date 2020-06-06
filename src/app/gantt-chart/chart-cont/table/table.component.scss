@@ -1,0 +1,62 @@
+.table {
+  min-width: 100%;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+
+  li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    width: 615px;
+
+    div {
+      display: inline-block;
+      padding: 0 8px;
+      vertical-align: middle;
+      overflow: hidden;
+    }
+
+    .icon {
+      width: 33px;
+      padding: 0;
+    }
+
+    .name {
+      width: 180px;
+    }
+
+    .col {
+      width: 80px;
+    }
+  }
+
+  .heading {
+    color: rgba(27, 17, 17, 0.54);
+    font-size: 12px;
+  }
+
+  .task {
+    font-weight: 500;
+    background-color: #eceff1;
+
+    .name {
+      width: auto;
+    }
+  }
+}
+
+.indent {
+  display: inline-block;
+  width: 10px;
+}
+
+::ng-deep .mat-icon-button {
+  height: auto;
+  line-height: 33px;
+  width: 33px;
+}

@@ -4,24 +4,25 @@ import {
   ITask,
   ISubtaskRaw,
   ISubtask,
-} from "../interfaces/chartInterfaces";
-import { MatDialog } from "@angular/material";
-import { TaskFormComponent } from "../task-components/task-form/task-form.component";
-import { SubtaskFormComponent } from "../subtask-components/subtask-form/subtask-form.component";
-import { DeleteTaskComponent } from "../task-components/delete-task/delete-task.component";
+} from "../../interfaces/chartInterfaces";
 import * as moment from "moment";
-import { DeleteSubtaskComponent } from "../subtask-components/delete-subtask/delete-subtask.component";
+import { MatDialog } from "@angular/material";
+import { TaskFormComponent } from "../../task-components/task-form/task-form.component";
+import { SubtaskFormComponent } from "../../subtask-components/subtask-form/subtask-form.component";
+import { DeleteTaskComponent } from "../../task-components/delete-task/delete-task.component";
+import { DeleteSubtaskComponent } from "../../subtask-components/delete-subtask/delete-subtask.component";
+import { ParseDataService } from "../parse-data.service";
 
 @Component({
-  selector: "app-chart",
-  templateUrl: "./chart.component.html",
-  styleUrls: ["./chart.component.scss"],
+  selector: "app-table",
+  templateUrl: "./table.component.html",
+  styleUrls: ["./table.component.scss"],
 })
-export class ChartComponent implements OnChanges {
+export class TableComponent implements OnChanges {
   @Input() chartDataRaw: Array<ITaskRaw>;
   chartData: Array<ITask> = [];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private dataService: ParseDataService) {}
 
   prepareSubtask({
     startDate: startDateRaw,
@@ -47,12 +48,15 @@ export class ChartComponent implements OnChanges {
   parseData(): Array<ITask> {
     return this.chartDataRaw.map((task) => ({
       ...task,
-      subtasks: task.subtasks ? task.subtasks.map(this.prepareSubtask) : undefined,
+      subtasks: task.subtasks
+        ? task.subtasks.map(this.prepareSubtask)
+        : undefined,
     }));
   }
 
   ngOnChanges() {
     this.chartData = this.parseData();
+    this.dataService.setParseData(this.chartData);
   }
 
   editTask(row: ITaskRaw) {
@@ -96,7 +100,7 @@ export class ChartComponent implements OnChanges {
   }
 
   deleteSubtask(taskId: string, subtaskId: number) {
-    console.log(subtaskId)
+    console.log(subtaskId);
     this.dialog.open(DeleteSubtaskComponent, {
       width: "50%",
       minWidth: "300px",

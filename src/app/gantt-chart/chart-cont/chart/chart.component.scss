@@ -1,0 +1,27 @@
+.chart {
+  .date-col {
+    padding: 0;
+    width: 50px;
+    text-align: center;
+  }
+
+  .subtask {
+    position: relative;
+  }
+
+  .subtask-bar {
+    position: absolute;
+    height: 32px;
+    top: 2px;
+    border-radius: 2px;
+    text-align: center;
+
+    &.blue {
+      background: #3f51b5;
+    }
+  }
+
+  .name {
+    color: white;
+  }
+}
