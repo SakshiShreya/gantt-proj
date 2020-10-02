@@ -37,7 +37,7 @@ export class GanttFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.data.row) {
+    if (this.data && this.data.row) {
       this.ganttForm.setValue({
         label: this.data.row.label,
         owner: this.data.row.owner,
@@ -53,7 +53,7 @@ export class GanttFormComponent implements OnInit {
     this.isSubmitButtonDisable = true;
     const submitData = { ...this.ganttForm.value };
 
-    if (submitData.startDate) {
+    if (submitData && submitData.startDate) {
       submitData.startDate = this.ganttForm.value.startDate.format(
         "YYYY-MM-DD"
       );
@@ -61,13 +61,13 @@ export class GanttFormComponent implements OnInit {
       delete submitData.startDate;
     }
 
-    if (submitData.duration) {
+    if (submitData && submitData.duration) {
       submitData.duration = [submitData.duration, "days"];
     } else {
       delete submitData.duration;
     }
 
-    if (this.data.row) {
+    if (this.data && this.data.row) {
       this.ganttScreenService
         .updateGanttRow(submitData, this.data.row.id)
         .then(() => this.dialogRef.close());
