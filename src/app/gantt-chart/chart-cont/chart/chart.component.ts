@@ -100,15 +100,6 @@ export class ChartComponent implements OnInit {
 
     this.chartData = this.parseData();
     console.log(this.chartData);
-
-    // if (action === "create") {
-    //   this.createChartSVG(data, {
-    //     minStartDate,
-    //     maxEndDate,
-    //   });
-    // } else {
-    //   this.updateChartSVG(data, { minStartDate, maxEndDate });
-    // }
   }
 
   ngOnInit() {
