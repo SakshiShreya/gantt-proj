@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "prettier.arrowParens": "avoid",
+    "editor.wordWrapColumn": 140,
+    "prettier.printWidth": 140,
+    "prettier.trailingComma": "none"
+  },
+  "extensions": {
+    "recommendations": ["esbenp.prettier-vscode"]
+  }
+}
