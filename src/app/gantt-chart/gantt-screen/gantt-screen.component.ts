@@ -45,9 +45,4 @@ export class GanttScreenComponent implements OnInit {
       data: {},
     });
   }
-
-  onDepToggleChange(event: MatSlideToggleChange) {
-    // update the value in dependency toggle
-    this.ganttChartService.setShowDependency(event.checked);
-  }
 }

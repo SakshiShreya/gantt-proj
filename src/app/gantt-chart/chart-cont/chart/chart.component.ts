@@ -101,10 +101,6 @@ export class ChartComponent implements OnInit {
     console.log(this.chartData);
   }
 
-  showDependency() {
-    console.log(this.ganttChartService.showDependency);
-  }
-
   ngOnInit() {
     // set data initially if available
     this.data = this.ganttChartService.parseData;
@@ -115,10 +111,6 @@ export class ChartComponent implements OnInit {
     this.ganttChartService.getParseData().subscribe((data) => {
       this.data = data;
       this.updateGanttChart();
-    });
-
-    this.ganttChartService.getShowDependency().subscribe((showDependency) => {
-      this.showDependency();
     });
   }
 }
