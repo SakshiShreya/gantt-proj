@@ -31,6 +31,7 @@
     .percent-bar {
       position: absolute;
       height: 32px;
+      padding: 0;
     }
 
     .name {
@@ -40,6 +41,9 @@
       line-height: 32px;
       position: relative;
       z-index: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

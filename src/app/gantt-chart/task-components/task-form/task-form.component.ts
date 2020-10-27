@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { GanttScreenService } from "../../gantt-screen/gantt-screen.service";
+import { GanttFirebaseService } from "../../services/gantt-firebase.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { ITaskRaw } from "../../interfaces/chartInterfaces";
 
@@ -17,7 +17,7 @@ export class TaskFormComponent implements OnInit {
   projId = "GiJfbLcXDAfSXpv9ndac";
 
   constructor(
-    private ganttScreenService: GanttScreenService,
+    private ganttScreenService: GanttFirebaseService,
     public dialogRef: MatDialogRef<TaskFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { row?: ITaskRaw }
   ) {}

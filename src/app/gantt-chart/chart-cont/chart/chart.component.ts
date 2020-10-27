@@ -6,7 +6,7 @@ import {
   ITaskChart,
 } from "../../interfaces/chartInterfaces";
 import * as moment from "moment";
-import { ParseDataService } from "../parse-data.service";
+import { GanttChartService } from "../../services/gantt-chart.service";
 
 @Component({
   selector: "app-chart",
@@ -19,7 +19,7 @@ export class ChartComponent implements OnInit {
   chartData: Array<ITaskChart> = [];
   colWidth = 50;
 
-  constructor(private dataService: ParseDataService) {}
+  constructor(private ganttChartService: GanttChartService) {}
 
   findDateBoundaries(data: Array<ITask>) {
     let minStartDate: moment.Moment;
@@ -68,13 +68,12 @@ export class ChartComponent implements OnInit {
       ...task,
       left: 0,
       subtasks: task.subtasks
-        ? task.subtasks.map(subTask => this.prepareSubtask(subTask))
+        ? task.subtasks.map((subTask) => this.prepareSubtask(subTask))
         : undefined,
     }));
   }
 
-  updateGanttChart(action: "create" | "update") {
-    console.log(action);
+  updateGanttChart() {
     // find min start date and max end date from all data points
     let { minStartDate, maxEndDate } = this.findDateBoundaries(this.data);
     if (minStartDate === undefined) {
@@ -102,24 +101,24 @@ export class ChartComponent implements OnInit {
     console.log(this.chartData);
   }
 
-  ngOnInit() {
-    let first = true;
+  showDependency() {
+    console.log(this.ganttChartService.showDependency);
+  }
 
+  ngOnInit() {
     // set data initially if available
-    this.data = this.dataService.parseData;
+    this.data = this.ganttChartService.parseData;
     if (this.data.length) {
-      this.updateGanttChart("create");
-      first = false;
+      this.updateGanttChart();
     }
 
-    this.dataService.getParseData().subscribe((data) => {
+    this.ganttChartService.getParseData().subscribe((data) => {
       this.data = data;
-      if (first) {
-        this.updateGanttChart("create");
-        first = false;
-      } else if (data.length) {
-        this.updateGanttChart("update");
-      }
+      this.updateGanttChart();
+    });
+
+    this.ganttChartService.getShowDependency().subscribe((showDependency) => {
+      this.showDependency();
     });
   }
 }

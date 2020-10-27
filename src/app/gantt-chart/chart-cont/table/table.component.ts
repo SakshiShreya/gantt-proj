@@ -11,7 +11,7 @@ import { TaskFormComponent } from "../../task-components/task-form/task-form.com
 import { SubtaskFormComponent } from "../../subtask-components/subtask-form/subtask-form.component";
 import { DeleteTaskComponent } from "../../task-components/delete-task/delete-task.component";
 import { DeleteSubtaskComponent } from "../../subtask-components/delete-subtask/delete-subtask.component";
-import { ParseDataService } from "../parse-data.service";
+import { GanttChartService } from '../../services/gantt-chart.service';
 
 @Component({
   selector: "app-table",
@@ -24,7 +24,7 @@ export class TableComponent implements OnChanges {
 
   constructor(
     public dialog: MatDialog,
-    private dataService: ParseDataService
+    private ganttChartService: GanttChartService
   ) {}
 
   prepareSubtask({
@@ -59,7 +59,7 @@ export class TableComponent implements OnChanges {
 
   ngOnChanges() {
     this.chartData = this.parseData();
-    this.dataService.setParseData(this.chartData);
+    this.ganttChartService.setParseData(this.chartData);
   }
 
   editTask(row: ITaskRaw) {

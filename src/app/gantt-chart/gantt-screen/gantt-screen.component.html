@@ -1,8 +1,25 @@
 <mat-card>
   <h1>{{ projData.name }}</h1>
 
-  <button mat-raised-button color="primary" (click)="openForm()">
-    Add task
-  </button>
-  <app-chart-cont *ngIf="ganttDataRaw.length" [chartDataRaw]="ganttDataRaw"></app-chart-cont>
+  <mat-toolbar>
+    <button mat-raised-button color="primary" (click)="openForm()">
+      Add task
+    </button>
+
+    <span class="spacer"></span>
+
+    <mat-slide-toggle
+      class="toggle"
+      color="primary"
+      [checked]="ganttChartService ? ganttChartService.showDependency : false"
+      (change)="onDepToggleChange($event)"
+    >
+      Dependency
+    </mat-slide-toggle>
+  </mat-toolbar>
+  
+  <app-chart-cont
+    *ngIf="ganttDataRaw.length"
+    [chartDataRaw]="ganttDataRaw"
+  ></app-chart-cont>
 </mat-card>

@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { GanttScreenService } from "../../gantt-screen/gantt-screen.service";
+import { GanttFirebaseService } from "../../services/gantt-firebase.service";
 import { ITaskRaw } from "../../interfaces/chartInterfaces";
 
 @Component({
@@ -12,7 +12,7 @@ export class DeleteSubtaskComponent {
   projId = "GiJfbLcXDAfSXpv9ndac";
 
   constructor(
-    private ganttScreenService: GanttScreenService,
+    private ganttScreenService: GanttFirebaseService,
     public dialogRef: MatDialogRef<DeleteSubtaskComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { parent: ITaskRaw, subtaskId: number }

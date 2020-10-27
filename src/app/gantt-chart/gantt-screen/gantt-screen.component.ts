@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { GanttScreenService } from "./gantt-screen.service";
-import { IProj, ITaskRaw, ITask } from "../interfaces/chartInterfaces";
-import { MatDialog } from "@angular/material";
+import { GanttFirebaseService } from "../services/gantt-firebase.service";
+import { IProj, ITaskRaw } from "../interfaces/chartInterfaces";
+import { MatDialog, MatSlideToggleChange } from "@angular/material";
 import { TaskFormComponent } from "../task-components/task-form/task-form.component";
+import { GanttChartService } from '../services/gantt-chart.service';
 
 @Component({
   selector: "app-gantt-screen",
@@ -15,8 +16,9 @@ export class GanttScreenComponent implements OnInit {
   projId = "GiJfbLcXDAfSXpv9ndac";
 
   constructor(
-    private ganttScreenService: GanttScreenService,
-    public dialog: MatDialog
+    private ganttScreenService: GanttFirebaseService,
+    public dialog: MatDialog,
+    private ganttChartService: GanttChartService
   ) {}
 
   ngOnInit() {
@@ -42,5 +44,10 @@ export class GanttScreenComponent implements OnInit {
       maxHeight: "100vh",
       data: {},
     });
+  }
+
+  onDepToggleChange(event: MatSlideToggleChange) {
+    // update the value in dependency toggle
+    this.ganttChartService.setShowDependency(event.checked);
   }
 }
