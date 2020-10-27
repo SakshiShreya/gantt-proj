@@ -1,4 +1,5 @@
 <div class="chart">
+  <!-- Top row -->
   <ul>
     <li class="heading" [ngStyle]="{ 'width.px': dates.length * colWidth }">
       <div class="date-col" *ngFor="let date of dates">
@@ -6,19 +7,41 @@
       </div>
     </li>
   </ul>
+
+  <!-- Chart -->
   <ul>
     <ng-template ngFor let-task [ngForOf]="chartData" let-taskId="index">
-      <li class="task" [ngStyle]="{ 'width.px': dates.length * colWidth }">
+      <!-- Task -->
+      <li class="task-row task" [ngStyle]="{ 'width.px': dates.length * colWidth }">
         <div class="date-col" *ngFor="let date of dates"></div>
+        <div
+          class="bar task blue"
+          [ngStyle]="{
+            'left.px': task.left * colWidth,
+            'width.px': (task.duration[0] + 1) * colWidth
+          }"
+          *ngIf="task.startDate"
+        >
+          <!-- <div
+            class="percent-bar blue"
+            [ngStyle]="{
+              'width.px':
+                ((task.duration[0] + 1) * colWidth * task.percentComplete) / 100
+            }"
+          ></div> -->
+          <label class="name">{{ task.name }}</label>
+        </div>
       </li>
+
+      <!-- Sub-task -->
       <li
         *ngFor="let subtask of task.subtasks; let id = index"
-        class="subtask"
+        class="task-row"
         [ngStyle]="{ 'width.px': dates.length * colWidth }"
       >
         <div class="date-col" *ngFor="let date of dates"></div>
         <div
-          class="subtask-bar blue"
+          class="bar subtask blue"
           [ngStyle]="{
             'left.px': subtask.left * colWidth,
             'width.px': (subtask.duration[0] + 1) * colWidth

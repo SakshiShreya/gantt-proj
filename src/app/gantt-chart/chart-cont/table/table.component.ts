@@ -22,7 +22,10 @@ export class TableComponent implements OnChanges {
   @Input() chartDataRaw: Array<ITaskRaw>;
   chartData: Array<ITask> = [];
 
-  constructor(public dialog: MatDialog, private dataService: ParseDataService) {}
+  constructor(
+    public dialog: MatDialog,
+    private dataService: ParseDataService
+  ) {}
 
   prepareSubtask({
     startDate: startDateRaw,
@@ -45,13 +48,62 @@ export class TableComponent implements OnChanges {
     };
   }
 
+  // data is subtask here
+  findDateBoundaries(data?: Array<ISubtask>) {
+    if (data) {
+      let startDate: moment.Moment;
+      let endDate: moment.Moment;
+
+      data.forEach(({ startDate: sD, endDate: eD }) => {
+        if (!startDate || sD.isBefore(startDate)) {
+          startDate = moment(sD);
+        }
+
+        if (!startDate || sD.isBefore(startDate)) {
+          startDate = moment(eD);
+        }
+
+        if (!endDate || eD.isAfter(endDate)) {
+          endDate = moment(eD);
+        }
+
+        if (!endDate || sD.isAfter(endDate)) {
+          endDate = moment(sD);
+        }
+      });
+
+      return {
+        startDate,
+        endDate,
+        duration: [endDate.diff(startDate, "days"), "days"] as [
+          moment.DurationInputArg1,
+          moment.DurationInputArg2
+        ],
+      };
+    } else {
+      return {
+        startDate: undefined,
+        endDate: undefined,
+        duration: [0, "days"] as [
+          moment.DurationInputArg1,
+          moment.DurationInputArg2
+        ],
+      };
+    }
+  }
+
   parseData(): Array<ITask> {
-    return this.chartDataRaw.map((task) => ({
-      ...task,
-      subtasks: task.subtasks
+    return this.chartDataRaw.map((task) => {
+      const subtasks = task.subtasks
         ? task.subtasks.map(this.prepareSubtask)
-        : undefined,
-    }));
+        : undefined;
+
+      return {
+        ...task,
+        ...this.findDateBoundaries(subtasks),
+        subtasks,
+      };
+    });
   }
 
   ngOnChanges() {
@@ -100,7 +152,6 @@ export class TableComponent implements OnChanges {
   }
 
   deleteSubtask(taskId: string, subtaskId: number) {
-    console.log(subtaskId);
     this.dialog.open(DeleteSubtaskComponent, {
       width: "50%",
       minWidth: "300px",

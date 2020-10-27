@@ -66,7 +66,7 @@ export class ChartComponent implements OnInit {
   parseData(): Array<ITaskChart> {
     return this.data.map((task) => ({
       ...task,
-      left: 0,
+      left: task.startDate && task.startDate.diff(this.dates[0], "days"),
       subtasks: task.subtasks
         ? task.subtasks.map(subTask => this.prepareSubtask(subTask))
         : undefined,

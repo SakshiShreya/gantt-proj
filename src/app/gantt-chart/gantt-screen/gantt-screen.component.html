@@ -1,5 +1,5 @@
 <mat-card>
-  <h1>{{ projData.name }}</h1>
+  <h1>{{ projData && projData.name }}</h1>
 
   <button mat-raised-button color="primary" (click)="openForm()">
     Add task

@@ -18,6 +18,9 @@ export interface ITaskRaw extends ITaskBase {
 }
 
 export interface ITask extends ITaskBase {
+  startDate: moment.Moment;
+  endDate: moment.Moment;
+  duration: [moment.DurationInputArg1, moment.DurationInputArg2];
   subtasks?: Array<ISubtask>;
 }
 
