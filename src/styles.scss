@@ -43,3 +43,23 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.full-width {
+  width: 100%;
+}
+
+.mat-menu-panel {
+  .mat-menu-content:not(:empty) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .mat-menu-item {
+    height: 36px;
+    line-height: 36px;
+
+    &[color="warn"] {
+      color: map-get($map: $gantt-proj-warn, $key: 500);
+    }
+  }
+}

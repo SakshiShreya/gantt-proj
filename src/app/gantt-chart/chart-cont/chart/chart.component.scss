@@ -1,0 +1,53 @@
+@mixin task-bar($color) {
+  background: lighten($color: $color, $amount: 10);
+
+  .percent-bar {
+    background: $color;
+  }
+}
+
+.chart {
+  .date-col {
+    padding: 0;
+    width: 50px;
+    text-align: center;
+  }
+
+  .subtask {
+    position: relative;
+  }
+
+  .subtask-bar {
+    position: absolute;
+    height: 32px;
+    top: 2px;
+    border-radius: 2px;
+    padding: 0px;
+
+    &.blue {
+      @include task-bar(#3f51b5);
+    }
+
+    .percent-bar {
+      position: absolute;
+      height: 32px;
+      padding: 0;
+    }
+
+    .name {
+      display: block;
+      text-align: center;
+      width: 100%;
+      line-height: 32px;
+      position: relative;
+      z-index: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .name {
+    color: white;
+  }
+}

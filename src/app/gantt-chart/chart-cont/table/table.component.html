@@ -1,0 +1,62 @@
+<div class="table">
+  <ul>
+    <li class="heading">
+      <div class="icon"></div>
+      <div class="name">Task</div>
+      <div class="col">Owner</div>
+      <div class="col">Start date</div>
+      <div class="col">End date</div>
+      <div class="col">Duration</div>
+      <div class="col">% Complete</div>
+    </li>
+  </ul>
+  <ul class="body">
+    <ng-template ngFor let-task [ngForOf]="chartData" let-taskId="index">
+      <li class="task">
+        <div class="icon">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editTask(task)">Edit</button>
+            <button mat-menu-item (click)="addSubtask(task)">
+              Add sub-task
+            </button>
+            <button mat-menu-item (click)="deleteTask(task)" color="warn">
+              Delete
+            </button>
+          </mat-menu>
+        </div>
+        <div class="name">{{ task.name }}</div>
+      </li>
+      <li *ngFor="let subtask of task.subtasks; let id = index" class="subtask">
+        <div class="icon">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editSubtask(taskId, id)">
+              Edit
+            </button>
+            <button
+              mat-menu-item
+              (click)="deleteSubtask(taskId, id)"
+              color="warn"
+            >
+              Delete
+            </button>
+          </mat-menu>
+        </div>
+        <div class="name">
+          <div class="indent"></div>
+          {{ subtask.name }}
+        </div>
+        <div class="col">{{ subtask.owner }}</div>
+        <div class="col">{{ subtask.startDate?.format("DD MMM, YY") }}</div>
+        <div class="col">{{ subtask.endDate?.format("DD MMM, YY") }}</div>
+        <div class="col">{{ subtask.duration?.join(" ") }}</div>
+        <div class="col">{{ subtask.percentComplete }}</div>
+      </li>
+    </ng-template>
+  </ul>
+</div>

@@ -1,0 +1,15 @@
+.chart-container {
+  display: flex;
+  margin-top: 16px;
+}
+
+.gantt-table-container {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.gantt-chart-cintainer {
+  overflow-x: auto;
+}

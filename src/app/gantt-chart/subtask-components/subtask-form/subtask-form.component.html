@@ -1,7 +1,7 @@
-<form class="gantt-form" [formGroup]="ganttForm">
+<form class="gantt-form" [formGroup]="subtaskForm">
   <mat-form-field class="full-width">
-    <mat-label>Label *</mat-label>
-    <input matInput formControlName="label" />
+    <mat-label>Name *</mat-label>
+    <input matInput formControlName="name" />
   </mat-form-field>
 
   <mat-form-field class="full-width">
@@ -33,12 +33,12 @@
     <input type="number" matInput formControlName="percentComplete" />
   </mat-form-field>
 
-  <mat-form-field class="full-width">
-    <mat-label>Depends On</mat-label>
-    <mat-select formControlName="dependsOn" multiple>
-      <mat-option *ngFor="let option of dependencyOptions" [value]="option.value">{{option.display}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="ganttForm.invalid || isSubmitButtonDisable">Submit</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="subtaskForm.invalid || isSubmitButtonDisable"
+  >
+    Submit
+  </button>
 </form>
