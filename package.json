@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "mobile": "ng serve --host 0.0.0.0",
+    "test-build": "ng build && firebase hosting:channel:deploy test",
     "build": "ng build --prod && firebase deploy",
     "test": "ng test",
     "lint": "ng lint",
