@@ -22,7 +22,10 @@ export class TableComponent implements OnChanges {
   @Input() chartDataRaw: Array<ITaskRaw>;
   chartData: Array<ITask> = [];
 
-  constructor(public dialog: MatDialog, private dataService: ParseDataService) {}
+  constructor(
+    public dialog: MatDialog,
+    private dataService: ParseDataService
+  ) {}
 
   prepareSubtask({
     startDate: startDateRaw,
@@ -35,7 +38,7 @@ export class TableComponent implements OnChanges {
     }
 
     const endDate = moment(startDate);
-    endDate.add(...(duration || [0, "days"]));
+    endDate.add(...([(duration[0] as number) - 1, duration[1]] || [0, "days"]));
 
     return {
       startDate,
