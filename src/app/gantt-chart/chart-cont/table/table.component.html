@@ -47,11 +47,8 @@
             </button>
           </mat-menu>
         </div>
-        <div class="name">
-          <div class="indent"></div>
-          {{ subtask.name }}
-        </div>
-        <div class="col">{{ subtask.owner }}</div>
+        <div class="name" [title]="subtask.name">{{ subtask.name }}</div>
+        <div class="col" [title]="subtask.owner">{{ subtask.owner }}</div>
         <div class="col">{{ subtask.startDate?.format("DD MMM, YY") }}</div>
         <div class="col">{{ subtask.endDate?.format("DD MMM, YY") }}</div>
         <div class="col">{{ subtask.duration?.join(" ") }}</div>
