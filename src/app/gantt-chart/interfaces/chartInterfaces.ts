@@ -11,6 +11,7 @@ interface IChartExtra {
 interface ITaskBase {
   name: string;
   id?: string;
+  order: number;
 }
 
 export interface ITaskRaw extends ITaskBase {

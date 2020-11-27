@@ -5,13 +5,16 @@ import {
   ISubtaskRaw,
   ISubtask,
 } from "../../interfaces/chartInterfaces";
+import { EMove } from "../../interfaces/chartEnums";
 import * as moment from "moment";
 import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../../task-components/task-form/task-form.component";
 import { SubtaskFormComponent } from "../../subtask-components/subtask-form/subtask-form.component";
 import { DeleteTaskComponent } from "../../task-components/delete-task/delete-task.component";
 import { DeleteSubtaskComponent } from "../../subtask-components/delete-subtask/delete-subtask.component";
-import { GanttChartService } from '../../services/gantt-chart.service';
+import { GanttChartService } from "../../services/gantt-chart.service";
+import { GanttFirebaseService } from "../../services/gantt-firebase.service";
+import { forkJoin } from "rxjs";
 
 @Component({
   selector: "app-table",
@@ -21,10 +24,12 @@ import { GanttChartService } from '../../services/gantt-chart.service';
 export class TableComponent implements OnChanges {
   @Input() chartDataRaw: Array<ITaskRaw>;
   chartData: Array<ITask> = [];
+  eMove = EMove;
 
   constructor(
     public dialog: MatDialog,
-    private ganttChartService: GanttChartService
+    private ganttChartService: GanttChartService,
+    private ganttFirebaseService: GanttFirebaseService
   ) {}
 
   prepareSubtask({
@@ -111,5 +116,59 @@ export class TableComponent implements OnChanges {
       maxHeight: "100vh",
       data: { parent: this.chartDataRaw[taskId], subtaskId },
     });
+  }
+
+  moveTasks(taskIndex: number, moveDirection: EMove) {
+    const currTask = this.chartDataRaw[taskIndex];
+    let otherTask: ITaskRaw = null;
+
+    if (moveDirection === EMove.UP) {
+      // previous task
+      otherTask = this.chartDataRaw[taskIndex - 1];
+    } else {
+      // next task
+      otherTask = this.chartDataRaw[taskIndex + 1];
+    }
+
+    const currUpdate = this.ganttFirebaseService.updateTask(
+      this.ganttFirebaseService.projId,
+      currTask.id,
+      { order: otherTask.order }
+    );
+
+    const otherUpdate = this.ganttFirebaseService.updateTask(
+      this.ganttFirebaseService.projId,
+      otherTask.id,
+      { order: currTask.order }
+    );
+
+    forkJoin([currUpdate, otherUpdate]).subscribe(() => {
+      /* do nothing for now */
+    });
+  }
+
+  moveSubtasks(taskIndex: number, subtaskIndex: number, moveDirection: EMove) {
+    let subtasks = this.chartDataRaw[taskIndex].subtasks;
+    let temp = subtasks[subtaskIndex];
+
+    if (moveDirection === EMove.UP) {
+      // previous task
+      subtasks[subtaskIndex] = subtasks[subtaskIndex - 1];
+      subtasks[subtaskIndex - 1] = temp;
+    } else {
+      // next task
+      subtasks[subtaskIndex] = subtasks[subtaskIndex + 1];
+      subtasks[subtaskIndex + 1] = temp;
+    }
+
+    this.ganttFirebaseService
+      .updateTask(
+        this.ganttFirebaseService.projId,
+        this.chartDataRaw[taskIndex].id,
+        { subtasks }
+      )
+      .then(() => {
+        /* do nothing for now */
+      });
   }
 }
