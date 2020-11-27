@@ -9,10 +9,8 @@ import { ITask } from "../../interfaces/chartInterfaces";
   styleUrls: ["./delete-task.component.scss"],
 })
 export class DeleteTaskComponent {
-  projId = "GiJfbLcXDAfSXpv9ndac";
-
   constructor(
-    private ganttScreenService: GanttFirebaseService,
+    private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<DeleteTaskComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { row: ITask }
@@ -23,8 +21,8 @@ export class DeleteTaskComponent {
   }
 
   deleteTask() {
-    this.ganttScreenService
-      .deleteTask(this.projId, this.data.row.id)
+    this.ganttFirebaseService
+      .deleteTask(this.ganttFirebaseService.projId, this.data.row.id)
       .then(() => this.dialogRef.close());
   }
 }

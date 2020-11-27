@@ -14,12 +14,11 @@ export class TaskFormComponent implements OnInit {
     name: new FormControl("", Validators.required),
   });
   isSubmitButtonDisable = false;
-  projId = "GiJfbLcXDAfSXpv9ndac";
 
   constructor(
-    private ganttScreenService: GanttFirebaseService,
+    private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<TaskFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { row?: ITaskRaw }
+    @Inject(MAT_DIALOG_DATA) public data: { row?: ITaskRaw; nextId?: number }
   ) {}
 
   ngOnInit() {
@@ -35,12 +34,21 @@ export class TaskFormComponent implements OnInit {
     const submitData = { ...this.taskForm.value };
 
     if (this.data.row) {
-      this.ganttScreenService
-        .updateTask(this.projId, this.data.row.id, submitData)
+      // if row already exists, then update it
+      this.ganttFirebaseService
+        .updateTask(
+          this.ganttFirebaseService.projId,
+          this.data.row.id,
+          submitData
+        )
         .then(() => this.dialogRef.close());
     } else {
-      this.ganttScreenService
-        .postNewTask(this.projId, submitData)
+      // otherwise create a new row
+      this.ganttFirebaseService
+        .postNewTask(this.ganttFirebaseService.projId, {
+          ...submitData,
+          order: this.data.nextId,
+        })
         .then(() => this.dialogRef.close());
     }
   }

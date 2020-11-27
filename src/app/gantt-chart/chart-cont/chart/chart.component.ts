@@ -68,7 +68,7 @@ export class ChartComponent implements OnInit {
       ...task,
       left: 0,
       subtasks: task.subtasks
-        ? task.subtasks.map((subTask) => this.prepareSubtask(subTask))
+        ? task.subtasks.map((subtask) => this.prepareSubtask(subtask))
         : undefined,
     }));
   }

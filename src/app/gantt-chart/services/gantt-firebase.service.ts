@@ -5,6 +5,10 @@ import * as firebase from "firebase/app";
 export class GanttFirebaseService {
   constructor(private fireStore: AngularFirestore) {}
 
+  get projId() {
+    return "GiJfbLcXDAfSXpv9ndac";
+  }
+
   getProj(projId: string) {
     return this.fireStore
       .collection("gantt-data")
@@ -43,7 +47,9 @@ export class GanttFirebaseService {
       });
   }
 
-  updateTask(projId: string, taskId: string, taskData: ITaskRaw) {
+  // Feels like I have used set here and update otherwise
+  // so that I can remember that we can use set also
+  updateTask(projId: string, taskId: string, taskData: Partial<ITaskRaw>) {
     return this.fireStore
       .collection("gantt-data")
       .doc(projId)
