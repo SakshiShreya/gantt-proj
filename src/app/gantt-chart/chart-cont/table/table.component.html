@@ -56,7 +56,9 @@
             <button mat-menu-item (click)="editSubtask(taskId, id)">
               Edit
             </button>
-            <button mat-menu-item [matMenuTriggerFor]="moveSubtask" [disabled]="task.subtasks.length <= 1">Move</button>
+            <button mat-menu-item [matMenuTriggerFor]="moveSubtask">
+              Move
+            </button>
             <button
               mat-menu-item
               (click)="deleteSubtask(taskId, id)"
@@ -65,19 +67,22 @@
               Delete
             </button>
           </mat-menu>
-          
+
           <mat-menu #moveSubtask="matMenu">
             <button
               mat-menu-item
               (click)="moveSubtasks(taskId, id, eMove.UP)"
-              [disabled]="id === 0"
+              [disabled]="taskId === 0 && id === 0"
             >
               Move Up
             </button>
             <button
               mat-menu-item
               (click)="moveSubtasks(taskId, id, eMove.DOWN)"
-              [disabled]="id === task.subtasks.length - 1"
+              [disabled]="
+                taskId === chartData.length - 1 &&
+                (task.subtasks.length ? id === task.subtasks.length - 1 : false)
+              "
             >
               Move Down
             </button>

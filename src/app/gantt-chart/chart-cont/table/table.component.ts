@@ -108,7 +108,6 @@ export class TableComponent implements OnChanges {
   }
 
   deleteSubtask(taskId: string, subtaskId: number) {
-    console.log(subtaskId);
     this.dialog.open(DeleteSubtaskComponent, {
       width: "50%",
       minWidth: "300px",
@@ -149,26 +148,83 @@ export class TableComponent implements OnChanges {
 
   moveSubtasks(taskIndex: number, subtaskIndex: number, moveDirection: EMove) {
     let subtasks = this.chartDataRaw[taskIndex].subtasks;
-    let temp = subtasks[subtaskIndex];
 
-    if (moveDirection === EMove.UP) {
-      // previous task
-      subtasks[subtaskIndex] = subtasks[subtaskIndex - 1];
-      subtasks[subtaskIndex - 1] = temp;
-    } else {
-      // next task
-      subtasks[subtaskIndex] = subtasks[subtaskIndex + 1];
-      subtasks[subtaskIndex + 1] = temp;
-    }
-
-    this.ganttFirebaseService
-      .updateTask(
+    const removeSubtask = (): Promise<void> => {
+      return this.ganttFirebaseService.deleteSubtask(
         this.ganttFirebaseService.projId,
-        this.chartDataRaw[taskIndex].id,
-        { subtasks }
-      )
-      .then(() => {
+        this.chartDataRaw[taskIndex],
+        subtaskIndex
+      );
+    };
+
+    const multipleCalls = (promises: Array<Promise<void>>) => {
+      forkJoin(promises).subscribe(() => {
         /* do nothing for now */
       });
+    };
+
+    const updateTask = () => {
+      this.ganttFirebaseService
+        .updateTask(
+          this.ganttFirebaseService.projId,
+          this.chartDataRaw[taskIndex].id,
+          { subtasks }
+        )
+        .then(() => {
+          /* do nothing for now */
+        });
+    };
+
+    if (moveDirection === EMove.UP) {
+      if (subtaskIndex === 0) {
+        // if it is topmost subtask, then it needs to be moved to the bottom of previous task
+
+        // remove the subtask from this task
+        const remove = removeSubtask();
+        // and add it to the bottom of previous task
+        const prevSubtasks = this.chartDataRaw[taskIndex - 1].subtasks || [];
+        prevSubtasks.push(subtasks[subtaskIndex]);
+        const add = this.ganttFirebaseService.updateTask(
+          this.ganttFirebaseService.projId,
+          this.chartDataRaw[taskIndex - 1].id,
+          { subtasks: prevSubtasks }
+        );
+
+        // update both tasks in database
+        multipleCalls([remove, add]);
+      } else {
+        // not the first subtask, then just swap the subtask with previous subtask and update in db
+        const temp = subtasks[subtaskIndex];
+        subtasks[subtaskIndex] = subtasks[subtaskIndex - 1];
+        subtasks[subtaskIndex - 1] = temp;
+
+        updateTask();
+      }
+    } else {
+      if (subtaskIndex === this.chartDataRaw[taskIndex].subtasks.length - 1) {
+        // if it is bottom-most subtask, then it needs to be moved to the top of next task
+
+        // remove the subtask from this task
+        const remove = removeSubtask();
+        // and add it to the top of previous task
+        const nextSubtasks = this.chartDataRaw[taskIndex + 1].subtasks || [];
+        nextSubtasks.unshift(subtasks[subtaskIndex]);
+        const add = this.ganttFirebaseService.updateTask(
+          this.ganttFirebaseService.projId,
+          this.chartDataRaw[taskIndex + 1].id,
+          { subtasks: nextSubtasks }
+        );
+
+        // update both tasks in database
+        multipleCalls([remove, add]);
+      } else {
+        // not the last subtask, then just swap the subtask with next subtask and update in db
+        const temp = subtasks[subtaskIndex];
+        subtasks[subtaskIndex] = subtasks[subtaskIndex + 1];
+        subtasks[subtaskIndex + 1] = temp;
+
+        updateTask();
+      }
+    }
   }
 }
