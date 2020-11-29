@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { GanttFirebaseService } from "../services/gantt-firebase.service";
 import { IProj, ITaskRaw } from "../interfaces/chartInterfaces";
-import { MatDialog, MatSlideToggleChange } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../task-components/task-form/task-form.component";
 
 @Component({

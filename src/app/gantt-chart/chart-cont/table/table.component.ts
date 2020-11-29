@@ -191,8 +191,7 @@ export class TableComponent implements OnChanges {
         );
 
         // update both tasks in database
-        // first add, then remove so that data is not lost
-        multipleCalls([add, remove]);
+        multipleCalls([remove, add]);
       } else {
         // not the first subtask, then just swap the subtask with previous subtask and update in db
         const temp = subtasks[subtaskIndex];
@@ -217,8 +216,7 @@ export class TableComponent implements OnChanges {
         );
 
         // update both tasks in database
-        // first add, then remove so that data is not lost
-        multipleCalls([add, remove]);
+        multipleCalls([remove, add]);
       } else {
         // not the last subtask, then just swap the subtask with next subtask and update in db
         const temp = subtasks[subtaskIndex];
