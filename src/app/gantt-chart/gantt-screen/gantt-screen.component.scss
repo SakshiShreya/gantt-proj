@@ -1,6 +1,11 @@
+@import "../../../assets/scss/variables";
+
 .mat-card {
-  max-width: 1300px;
-  margin: auto;
+  margin: 13px;
+
+  @media (max-width: $mobile) {
+    margin: 13px 0;
+  }
 }
 
 .spacer {
