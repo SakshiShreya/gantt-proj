@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { GanttScreenService } from "../../gantt-screen/gantt-screen.service";
+import { GanttFirebaseService } from "../../services/gantt-firebase.service";
 import { ITaskRaw } from "../../interfaces/chartInterfaces";
 
 @Component({
@@ -9,13 +9,11 @@ import { ITaskRaw } from "../../interfaces/chartInterfaces";
   styleUrls: ["./delete-subtask.component.scss"],
 })
 export class DeleteSubtaskComponent {
-  projId = "GiJfbLcXDAfSXpv9ndac";
-
   constructor(
-    private ganttScreenService: GanttScreenService,
+    private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<DeleteSubtaskComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { parent: ITaskRaw, subtaskId: number }
+    public data: { parent: ITaskRaw; subtaskId: number }
   ) {}
 
   closePopup() {
@@ -23,8 +21,8 @@ export class DeleteSubtaskComponent {
   }
 
   deleteSubtask() {
-    this.ganttScreenService
-      .deleteSubtask(this.projId, this.data.parent, this.data.subtaskId)
+    this.ganttFirebaseService
+      .deleteSubtask(this.ganttFirebaseService.projId, this.data.parent, this.data.subtaskId)
       .then(() => this.dialogRef.close());
   }
 }

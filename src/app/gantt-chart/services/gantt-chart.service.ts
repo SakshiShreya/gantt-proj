@@ -1,9 +1,7 @@
-import { Subject, Observable } from "rxjs";
-import { Injectable } from "@angular/core";
-import { ITask } from "../interfaces/chartInterfaces";
+import { Observable, Subject } from 'rxjs';
+import { ITask } from '../interfaces/chartInterfaces';
 
-@Injectable({ providedIn: "root" })
-export class ParseDataService {
+export class GanttChartService {
   private parseDataState = new Subject<Array<ITask>>();
   parseData = Array<ITask>();
 

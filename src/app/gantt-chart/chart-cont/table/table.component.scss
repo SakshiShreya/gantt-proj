@@ -50,12 +50,7 @@ ul {
   }
 }
 
-.indent {
-  display: inline-block;
-  width: 10px;
-}
-
-::ng-deep .mat-icon-button {
+.mat-icon-button {
   height: auto;
   line-height: 33px;
   width: 33px;

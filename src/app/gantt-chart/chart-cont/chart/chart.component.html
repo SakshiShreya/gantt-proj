@@ -44,17 +44,14 @@
           class="bar subtask blue"
           [ngStyle]="{
             'left.px': subtask.left * colWidth,
-            'width.px': (subtask.duration[0] + 1) * colWidth
+            'width.px': subtask.duration[0] * colWidth
           }"
         >
           <div
             class="percent-bar blue"
             [ngStyle]="{
               'width.px':
-                ((subtask.duration[0] + 1) *
-                  colWidth *
-                  subtask.percentComplete) /
-                100
+                (subtask.duration[0] * colWidth * subtask.percentComplete) / 100
             }"
           ></div>
           <label class="name">{{ subtask.name }}</label>

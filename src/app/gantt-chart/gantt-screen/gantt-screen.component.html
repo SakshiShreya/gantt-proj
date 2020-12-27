@@ -1,8 +1,16 @@
 <mat-card>
-  <h1>{{ projData && projData.name }}</h1>
+  <h2 class="mat-title">{{ projData?.name }}</h2>
 
-  <button mat-raised-button color="primary" (click)="openForm()">
-    Add task
-  </button>
-  <app-chart-cont *ngIf="ganttDataRaw.length" [chartDataRaw]="ganttDataRaw"></app-chart-cont>
+  <mat-toolbar>
+    <button mat-raised-button color="primary" (click)="openForm()">
+      Add task
+    </button>
+
+    <span class="spacer"></span>
+  </mat-toolbar>
+  
+  <app-chart-cont
+    *ngIf="ganttDataRaw.length"
+    [chartDataRaw]="ganttDataRaw"
+  ></app-chart-cont>
 </mat-card>

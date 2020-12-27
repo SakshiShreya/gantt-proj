@@ -5,13 +5,16 @@ import {
   ISubtaskRaw,
   ISubtask,
 } from "../../interfaces/chartInterfaces";
+import { EMove } from "../../interfaces/chartEnums";
 import * as moment from "moment";
 import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../../task-components/task-form/task-form.component";
 import { SubtaskFormComponent } from "../../subtask-components/subtask-form/subtask-form.component";
 import { DeleteTaskComponent } from "../../task-components/delete-task/delete-task.component";
 import { DeleteSubtaskComponent } from "../../subtask-components/delete-subtask/delete-subtask.component";
-import { ParseDataService } from "../parse-data.service";
+import { GanttChartService } from "../../services/gantt-chart.service";
+import { GanttFirebaseService } from "../../services/gantt-firebase.service";
+import { forkJoin } from "rxjs";
 
 @Component({
   selector: "app-table",
@@ -21,10 +24,12 @@ import { ParseDataService } from "../parse-data.service";
 export class TableComponent implements OnChanges {
   @Input() chartDataRaw: Array<ITaskRaw>;
   chartData: Array<ITask> = [];
+  eMove = EMove;
 
   constructor(
     public dialog: MatDialog,
-    private dataService: ParseDataService
+    private ganttChartService: GanttChartService,
+    private ganttFirebaseService: GanttFirebaseService
   ) {}
 
   prepareSubtask({
@@ -38,7 +43,7 @@ export class TableComponent implements OnChanges {
     }
 
     const endDate = moment(startDate);
-    endDate.add(...(duration || [0, "days"]));
+    endDate.add(...([(duration[0] as number) - 1, duration[1]] || [0, "days"]));
 
     return {
       startDate,
@@ -75,7 +80,9 @@ export class TableComponent implements OnChanges {
       return {
         startDate,
         endDate,
-        duration: [endDate.diff(startDate, "days"), "days"] as [
+        duration: (endDate
+          ? [endDate.diff(startDate, "days"), "days"]
+          : [0, "days"]) as [
           moment.DurationInputArg1,
           moment.DurationInputArg2
         ],
@@ -108,7 +115,7 @@ export class TableComponent implements OnChanges {
 
   ngOnChanges() {
     this.chartData = this.parseData();
-    this.dataService.setParseData(this.chartData);
+    this.ganttChartService.setParseData(this.chartData);
   }
 
   editTask(row: ITaskRaw) {
@@ -159,5 +166,116 @@ export class TableComponent implements OnChanges {
       maxHeight: "100vh",
       data: { parent: this.chartDataRaw[taskId], subtaskId },
     });
+  }
+
+  moveTasks(taskIndex: number, moveDirection: EMove) {
+    const currTask = this.chartDataRaw[taskIndex];
+    let otherTask: ITaskRaw = null;
+
+    if (moveDirection === EMove.UP) {
+      // previous task
+      otherTask = this.chartDataRaw[taskIndex - 1];
+    } else {
+      // next task
+      otherTask = this.chartDataRaw[taskIndex + 1];
+    }
+
+    const currUpdate = this.ganttFirebaseService.updateTask(
+      this.ganttFirebaseService.projId,
+      currTask.id,
+      { order: otherTask.order }
+    );
+
+    const otherUpdate = this.ganttFirebaseService.updateTask(
+      this.ganttFirebaseService.projId,
+      otherTask.id,
+      { order: currTask.order }
+    );
+
+    forkJoin([currUpdate, otherUpdate]).subscribe(() => {
+      /* do nothing for now */
+    });
+  }
+
+  moveSubtasks(taskIndex: number, subtaskIndex: number, moveDirection: EMove) {
+    let subtasks = this.chartDataRaw[taskIndex].subtasks;
+
+    const removeSubtask = (): Promise<void> => {
+      return this.ganttFirebaseService.deleteSubtask(
+        this.ganttFirebaseService.projId,
+        this.chartDataRaw[taskIndex],
+        subtaskIndex
+      );
+    };
+
+    const multipleCalls = (promises: Array<Promise<void>>) => {
+      forkJoin(promises).subscribe(() => {
+        /* do nothing for now */
+      });
+    };
+
+    const updateTask = () => {
+      this.ganttFirebaseService
+        .updateTask(
+          this.ganttFirebaseService.projId,
+          this.chartDataRaw[taskIndex].id,
+          { subtasks }
+        )
+        .then(() => {
+          /* do nothing for now */
+        });
+    };
+
+    if (moveDirection === EMove.UP) {
+      if (subtaskIndex === 0) {
+        // if it is topmost subtask, then it needs to be moved to the bottom of previous task
+
+        // remove the subtask from this task
+        const remove = removeSubtask();
+        // and add it to the bottom of previous task
+        const prevSubtasks = this.chartDataRaw[taskIndex - 1].subtasks || [];
+        prevSubtasks.push(subtasks[subtaskIndex]);
+        const add = this.ganttFirebaseService.updateTask(
+          this.ganttFirebaseService.projId,
+          this.chartDataRaw[taskIndex - 1].id,
+          { subtasks: prevSubtasks }
+        );
+
+        // update both tasks in database
+        multipleCalls([remove, add]);
+      } else {
+        // not the first subtask, then just swap the subtask with previous subtask and update in db
+        const temp = subtasks[subtaskIndex];
+        subtasks[subtaskIndex] = subtasks[subtaskIndex - 1];
+        subtasks[subtaskIndex - 1] = temp;
+
+        updateTask();
+      }
+    } else {
+      if (subtaskIndex === this.chartDataRaw[taskIndex].subtasks.length - 1) {
+        // if it is bottom-most subtask, then it needs to be moved to the top of next task
+
+        // remove the subtask from this task
+        const remove = removeSubtask();
+        // and add it to the top of previous task
+        const nextSubtasks = this.chartDataRaw[taskIndex + 1].subtasks || [];
+        nextSubtasks.unshift(subtasks[subtaskIndex]);
+        const add = this.ganttFirebaseService.updateTask(
+          this.ganttFirebaseService.projId,
+          this.chartDataRaw[taskIndex + 1].id,
+          { subtasks: nextSubtasks }
+        );
+
+        // update both tasks in database
+        multipleCalls([remove, add]);
+      } else {
+        // not the last subtask, then just swap the subtask with next subtask and update in db
+        const temp = subtasks[subtaskIndex];
+        subtasks[subtaskIndex] = subtasks[subtaskIndex + 1];
+        subtasks[subtaskIndex + 1] = temp;
+
+        updateTask();
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { GanttScreenService } from "./gantt-screen.service";
-import { IProj, ITaskRaw, ITask } from "../interfaces/chartInterfaces";
+import { GanttFirebaseService } from "../services/gantt-firebase.service";
+import { IProj, ITaskRaw } from "../interfaces/chartInterfaces";
 import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../task-components/task-form/task-form.component";
 
@@ -12,25 +12,28 @@ import { TaskFormComponent } from "../task-components/task-form/task-form.compon
 export class GanttScreenComponent implements OnInit {
   projData: IProj = { name: "" };
   ganttDataRaw: Array<ITaskRaw> = [];
-  projId = "GiJfbLcXDAfSXpv9ndac";
 
   constructor(
-    private ganttScreenService: GanttScreenService,
+    private ganttFirebaseService: GanttFirebaseService,
     public dialog: MatDialog
   ) {}
 
   ngOnInit() {
-    this.ganttScreenService.getProj(this.projId).subscribe((res) => {
-      this.projData = res.payload.data();
-    });
-
-    this.ganttScreenService
-      .getTasks(this.projId)
+    this.ganttFirebaseService
+      .getProj(this.ganttFirebaseService.projId)
       .subscribe((res) => {
-        this.ganttDataRaw = res.map((item) => ({
-          id: item.payload.doc.id,
-          ...item.payload.doc.data(),
-        }));
+        this.projData = res.payload.data();
+      });
+
+    this.ganttFirebaseService
+      .getTasks(this.ganttFirebaseService.projId)
+      .subscribe((res) => {
+        this.ganttDataRaw = res
+          .map((item) => ({
+            id: item.payload.doc.id,
+            ...item.payload.doc.data(),
+          }))
+          .sort((a, b) => a.order - b.order);
       });
   }
 
@@ -40,7 +43,9 @@ export class GanttScreenComponent implements OnInit {
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: {},
+      data: {
+        nextId: this.ganttDataRaw[this.ganttDataRaw.length - 1].order + 1,
+      },
     });
   }
 }

@@ -1,4 +1,24 @@
+@import "../../../assets/scss/variables";
+
 .mat-card {
-  max-width: 1300px;
-  margin: auto;
+  margin: 13px;
+
+  @media (max-width: $mobile) {
+    margin: 13px 0;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.toggle {
+  font-size: initial;
+  font-weight: initial;
+}
+
+.menu {
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
 }

@@ -22,8 +22,26 @@
             <button mat-menu-item (click)="addSubtask(task)">
               Add sub-task
             </button>
+            <button mat-menu-item [matMenuTriggerFor]="moveTask">Move</button>
             <button mat-menu-item (click)="deleteTask(task)" color="warn">
               Delete
+            </button>
+          </mat-menu>
+
+          <mat-menu #moveTask="matMenu">
+            <button
+              mat-menu-item
+              (click)="moveTasks(taskId, eMove.UP)"
+              [disabled]="taskId === 0"
+            >
+              Move Up
+            </button>
+            <button
+              mat-menu-item
+              (click)="moveTasks(taskId, eMove.DOWN)"
+              [disabled]="taskId === chartData.length - 1"
+            >
+              Move Down
             </button>
           </mat-menu>
         </div>
@@ -38,6 +56,9 @@
             <button mat-menu-item (click)="editSubtask(taskId, id)">
               Edit
             </button>
+            <button mat-menu-item [matMenuTriggerFor]="moveSubtask">
+              Move
+            </button>
             <button
               mat-menu-item
               (click)="deleteSubtask(taskId, id)"
@@ -46,12 +67,29 @@
               Delete
             </button>
           </mat-menu>
+
+          <mat-menu #moveSubtask="matMenu">
+            <button
+              mat-menu-item
+              (click)="moveSubtasks(taskId, id, eMove.UP)"
+              [disabled]="taskId === 0 && id === 0"
+            >
+              Move Up
+            </button>
+            <button
+              mat-menu-item
+              (click)="moveSubtasks(taskId, id, eMove.DOWN)"
+              [disabled]="
+                taskId === chartData.length - 1 &&
+                (task.subtasks.length ? id === task.subtasks.length - 1 : false)
+              "
+            >
+              Move Down
+            </button>
+          </mat-menu>
         </div>
-        <div class="name">
-          <div class="indent"></div>
-          {{ subtask.name }}
-        </div>
-        <div class="col">{{ subtask.owner }}</div>
+        <div class="name" [title]="subtask.name">{{ subtask.name }}</div>
+        <div class="col" [title]="subtask.owner">{{ subtask.owner }}</div>
         <div class="col">{{ subtask.startDate?.format("DD MMM, YY") }}</div>
         <div class="col">{{ subtask.endDate?.format("DD MMM, YY") }}</div>
         <div class="col">{{ subtask.duration?.join(" ") }}</div>
