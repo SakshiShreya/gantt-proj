@@ -2,6 +2,7 @@ import * as moment from "moment";
 
 export interface IProj {
   name: string;
+  logo?: string;
 }
 
 interface IChartExtra {

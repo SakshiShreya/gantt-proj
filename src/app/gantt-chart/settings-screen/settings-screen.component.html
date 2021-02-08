@@ -1,0 +1,25 @@
+<mat-card>
+  <h2 class="mat-title">
+    {{ projData && projData.name ? projData.name + " Settings" : "" }}
+  </h2>
+
+  <h3 class="mat-subheading-2 mg-t10">Logo</h3>
+  <div class="dropzone" *ngIf="!projData?.logo">
+    <input
+      type="file"
+      #fileDropRef
+      id="fileDropRef"
+      (change)="logoUploadHandler($event.target.files)"
+    />
+    <p class="mat-subheading-1">Drag and drop logo here</p>
+    <p class="mat-subheading-1">OR</p>
+    <label
+      for="fileDropRef"
+      class="mat-raised-button mat-button-base mat-primary"
+      >Browse for file</label
+    >
+  </div>
+  <div class="logo-cont" *ngIf="projData?.logo">
+    <img [src]="projData?.logo" class="logo" />
+  </div>
+</mat-card>

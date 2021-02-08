@@ -13,6 +13,7 @@ import { DeleteSubtaskComponent } from "./subtask-components/delete-subtask/dele
 import { TableComponent } from "./chart-cont/table/table.component";
 import { ChartComponent } from './chart-cont/chart/chart.component';
 import { GanttChartService } from './services/gantt-chart.service';
+import { SettingsScreenComponent } from './settings-screen/settings-screen.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { GanttChartService } from './services/gantt-chart.service';
     DeleteSubtaskComponent,
     TableComponent,
     ChartComponent,
+    SettingsScreenComponent,
   ],
   imports: [
     CommonModule,
