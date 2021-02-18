@@ -4,22 +4,32 @@
   </h2>
 
   <h3 class="mat-subheading-2 mg-t10">Logo</h3>
-  <div class="dropzone" *ngIf="!projData?.logo">
-    <input
-      type="file"
-      #fileDropRef
-      id="fileDropRef"
-      (change)="logoUploadHandler($event.target.files)"
-    />
-    <p class="mat-subheading-1">Drag and drop logo here</p>
-    <p class="mat-subheading-1">OR</p>
-    <label
-      for="fileDropRef"
-      class="mat-raised-button mat-button-base mat-primary"
-      >Browse for file</label
-    >
-  </div>
-  <div class="logo-cont" *ngIf="projData?.logo">
-    <img [src]="projData?.logo" class="logo" />
-  </div>
+
+  <form class="logo-form" #logoForm="ngForm">
+    <mat-form-field class="single-field">
+      <mat-label>Select Logo</mat-label>
+      <mat-select
+        [(ngModel)]="logoRef"
+        (selectionChange)="onLogoChange()"
+        name="logoRef"
+      >
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let logoRef of logoRefs" [value]="logoRef">
+          {{ logoRef.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div *ngIf="logoRef && selectedLogoData && selectedLogoData.url" class="logo-cont">
+      <h4 class="mat-h4">Logo preview:</h4>
+      <img [src]="selectedLogoData.url" [alt]="selectedLogoData.name" class="logo" />
+    </div>
+
+    <div class="save-btn">
+      <button mat-raised-button color="primary" (click)="onLogoSave()" [disabled]="logoRef && selectedLogoData && !selectedLogoData.name">
+        Save
+      </button>
+      <mat-spinner *ngIf="logoRef && selectedLogoData && !selectedLogoData.name" diameter="20" class="logo-spinner"></mat-spinner>
+    </div>
+  </form>
 </mat-card>

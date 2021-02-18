@@ -8,27 +8,26 @@
   }
 }
 
-.dropzone {
-  padding: 32px;
-  text-align: center;
-  border: dashed 1px #979797;
-  position: relative;
-
-  input {
-    opacity: 0;
-    position: absolute;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-  }
+.single-field {
+  width: 100%;
+  max-width: 400px;
 }
 
 .logo-cont {
-  height: 180px;
+  margin-bottom: 16px;
 }
 
 .logo {
-  max-height: 100%;
+  max-height: 180px;
+  max-width: 100%;
+}
+
+.save-btn {
+  display: block;
+}
+
+.logo-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 16px;
 }

@@ -1,8 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { IProj } from "../interfaces/chartInterfaces";
 import { GanttFirebaseService } from "../services/gantt-firebase.service";
-import { AngularFireStorage } from "@angular/fire/storage";
-import { finalize } from "rxjs/operators";
 import { Observable } from "rxjs";
 
 @Component({
@@ -12,51 +10,53 @@ import { Observable } from "rxjs";
 })
 export class SettingsScreenComponent implements OnInit {
   projData: IProj = { name: "" };
-  downloadURL: Observable<string>;
+  logoRefs: firebase.storage.Reference[];
   fb;
+  logoRef: firebase.storage.Reference;
+  selectedLogoData: { name: string; url: string };
 
-  constructor(
-    private ganttFirebaseService: GanttFirebaseService,
-    private storage: AngularFireStorage
-  ) {}
+  constructor(private ganttFirebaseService: GanttFirebaseService) {}
 
   ngOnInit() {
     this.ganttFirebaseService
       .getProj(this.ganttFirebaseService.projId)
       .subscribe((res) => {
         this.projData = res.payload.data();
+        this.selectLogo();
       });
+
+    this.ganttFirebaseService.getAllLogos().then(({ items }) => {
+      this.logoRefs = items;
+      this.selectLogo();
+    });
   }
 
-  logoUploadHandler(files: FileList) {
-    const file = files[0];
-    const filePath = "logos/" + file.name;
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, file);
-    task
-      .snapshotChanges()
-      .pipe(
-        finalize(() => {
-          this.downloadURL = fileRef.getDownloadURL();
-          this.downloadURL.subscribe((logo) => {
-            if (logo) {
-              this.fb = logo;
-              this.ganttFirebaseService.updateProj(
-                this.ganttFirebaseService.projId,
-                { logo }
-              );
+  selectLogo() {
+    if (this.projData.logo && this.projData.logo.name) {
+      this.logoRef = this.logoRefs.find(
+        (logoRef) => logoRef.name === this.projData.logo.name
+      );
+    }
+  }
 
-              // TODO: show success screen
-            } else {
-              // TODO: show failure screen
-            }
-          });
-        })
-      )
-      .subscribe((url) => {
-        if (url) {
-          console.log(url);
-        }
+  onLogoChange() {
+    console.log(this.logoRef);
+    if (this.logoRef) {
+      this.logoRef.getDownloadURL().then((url) => {
+        this.selectedLogoData = { name: this.logoRef.name, url };
       });
+    } else {
+      this.selectedLogoData = { name: "", url: "" };
+    }
+  }
+
+  onLogoSave() {
+    console.log(this.selectedLogoData);
+    this.ganttFirebaseService
+      .updateProj(this.ganttFirebaseService.projId, {
+        logo: this.selectedLogoData,
+      })
+      .then((res) => console.log(res))
+      .catch(console.log);
   }
 }

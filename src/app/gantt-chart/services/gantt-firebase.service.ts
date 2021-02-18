@@ -106,4 +106,9 @@ export class GanttFirebaseService {
       .doc(taskData.id)
       .update({ subtasks });
   }
+
+  getAllLogos() {
+    let logosRef = firebase.storage().ref("logos");
+    return logosRef.listAll();
+  }
 }

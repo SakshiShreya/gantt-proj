@@ -1,7 +1,7 @@
 <mat-card>
   <div class="head">
     <h2 class="mat-title">{{ projData?.name }}</h2>
-    <div class="logo" *ngIf="projData?.logo"><img [src]="projData?.logo" class="logo" /></div>
+    <div class="logo" *ngIf="projData?.logo"><img [src]="projData.logo.url" [alt]="projData.logo.name" class="logo" /></div>
   </div>
 
   <mat-toolbar>
