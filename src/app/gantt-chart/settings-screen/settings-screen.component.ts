@@ -36,18 +36,24 @@ export class SettingsScreenComponent implements OnInit {
       this.logoRef = this.logoRefs.find(
         (logoRef) => logoRef.name === this.projData.logo.name
       );
+
+      this.loadLogo();
     }
   }
 
   onLogoChange() {
     console.log(this.logoRef);
     if (this.logoRef) {
-      this.logoRef.getDownloadURL().then((url) => {
-        this.selectedLogoData = { name: this.logoRef.name, url };
-      });
+      this.loadLogo();
     } else {
       this.selectedLogoData = { name: "", url: "" };
     }
+  }
+
+  loadLogo() {
+    this.logoRef.getDownloadURL().then((url) => {
+      this.selectedLogoData = { name: this.logoRef.name, url };
+    });
   }
 
   onLogoSave() {

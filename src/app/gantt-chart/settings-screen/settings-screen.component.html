@@ -3,33 +3,51 @@
     {{ projData && projData.name ? projData.name + " Settings" : "" }}
   </h2>
 
-  <h3 class="mat-subheading-2 mg-t10">Logo</h3>
+  <ng-container *ngIf="logoRefs.length">
+    <h3 class="mat-subheading-2 mg-t10">Logo</h3>
 
-  <form class="logo-form" #logoForm="ngForm">
-    <mat-form-field class="single-field">
-      <mat-label>Select Logo</mat-label>
-      <mat-select
-        [(ngModel)]="logoRef"
-        (selectionChange)="onLogoChange()"
-        name="logoRef"
+    <form class="logo-form" #logoForm="ngForm">
+      <mat-form-field class="single-field">
+        <mat-label>Select Logo</mat-label>
+        <mat-select
+          [(ngModel)]="logoRef"
+          (selectionChange)="onLogoChange()"
+          name="logoRef"
+        >
+          <mat-option>None</mat-option>
+          <mat-option *ngFor="let logoRef of logoRefs" [value]="logoRef">
+            {{ logoRef.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div
+        *ngIf="logoRef && selectedLogoData && selectedLogoData.url"
+        class="logo-cont"
       >
-        <mat-option>None</mat-option>
-        <mat-option *ngFor="let logoRef of logoRefs" [value]="logoRef">
-          {{ logoRef.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <h4 class="mat-h4">Logo preview:</h4>
+        <img
+          [src]="selectedLogoData.url"
+          [alt]="selectedLogoData.name"
+          class="logo"
+        />
+      </div>
 
-    <div *ngIf="logoRef && selectedLogoData && selectedLogoData.url" class="logo-cont">
-      <h4 class="mat-h4">Logo preview:</h4>
-      <img [src]="selectedLogoData.url" [alt]="selectedLogoData.name" class="logo" />
-    </div>
-
-    <div class="save-btn">
-      <button mat-raised-button color="primary" (click)="onLogoSave()" [disabled]="logoRef && selectedLogoData && !selectedLogoData.name">
-        Save
-      </button>
-      <mat-spinner *ngIf="logoRef && selectedLogoData && !selectedLogoData.name" diameter="20" class="logo-spinner"></mat-spinner>
-    </div>
-  </form>
+      <div class="save-btn">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onLogoSave()"
+          [disabled]="logoRef && selectedLogoData && !selectedLogoData.name"
+        >
+          Save
+        </button>
+        <mat-spinner
+          *ngIf="logoRef && selectedLogoData && !selectedLogoData.name"
+          diameter="20"
+          class="logo-spinner"
+        ></mat-spinner>
+      </div>
+    </form>
+  </ng-container>
 </mat-card>
