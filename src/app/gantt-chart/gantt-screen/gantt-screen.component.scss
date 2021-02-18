@@ -2,13 +2,17 @@
 
 .head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
 .logo {
   height: 42px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+
+  img {
+    height: 100%;
+  }
 }
 
 .mat-card {
