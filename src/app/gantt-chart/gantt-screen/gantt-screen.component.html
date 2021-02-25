@@ -5,7 +5,7 @@
 
   <span class="spacer"></span>
 
-  <a mat-button routerLink="settings"><mat-icon>settings</mat-icon></a>
+  <a mat-stroked-button routerLink="settings" class="edit-cont"><mat-icon class="edit">edit</mat-icon></a>
 </mat-toolbar>
 
 <mat-card>
@@ -14,6 +14,23 @@
       <img [src]="projData.logo.url" [alt]="projData.logo.name" />
     </div>
     <h2 class="mat-title">{{ projData?.name }}</h2>
+  </div>
+
+  <div class="meta">
+    <div class="col">
+      <h3 class="title">Project Manager</h3>
+      <p class="data">{{ projData.projManager || "--" }}</p>
+    </div>
+    <div class="col">
+      <h3 class="title">Start Date</h3>
+      <p class="data">{{ projData.startDate || "--" }}</p>
+    </div>
+  </div>
+  <div class="meta">
+    <div>
+      <h3 class="title">Description</h3>
+      <p class="data">{{ projData.description || "--" }}</p>
+    </div>
   </div>
 
   <app-chart-cont

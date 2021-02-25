@@ -5,6 +5,16 @@
   align-items: center;
 }
 
+.edit-cont {
+  padding: 0;
+  min-width: 36px;
+}
+
+.edit {
+  font-size: 18px;
+  height: 18px;
+}
+
 .logo {
   height: 42px;
   margin-bottom: 16px;
@@ -36,4 +46,28 @@
   height: 40px;
   width: 40px;
   line-height: 40px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+
+  .col {
+    margin-right: 16px;
+    min-width: calc(50% - 8px);
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .title {
+    font-size: 12px;
+    color: rgba(27, 17, 17, 0.54);
+    margin-bottom: 8px;
+  }
+
+  .data {
+    margin-top: 0;
+  }
 }

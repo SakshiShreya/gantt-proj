@@ -11,9 +11,9 @@ import { SubtaskFormComponent } from "./subtask-components/subtask-form/subtask-
 import { DeleteTaskComponent } from "./task-components/delete-task/delete-task.component";
 import { DeleteSubtaskComponent } from "./subtask-components/delete-subtask/delete-subtask.component";
 import { TableComponent } from "./chart-cont/table/table.component";
-import { ChartComponent } from './chart-cont/chart/chart.component';
-import { GanttChartService } from './services/gantt-chart.service';
-import { SettingsScreenComponent } from './settings-screen/settings-screen.component';
+import { ChartComponent } from "./chart-cont/chart/chart.component";
+import { GanttChartService } from "./services/gantt-chart.service";
+import { SettingsScreenComponent } from "./settings-screen/settings-screen.component";
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { SettingsScreenComponent } from './settings-screen/settings-screen.compo
     GanttChartRoutingModule,
     ReactiveFormsModule,
     AppMaterialModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [GanttFirebaseService, GanttChartService],
   entryComponents: [
