@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { IProj } from "../interfaces/chartInterfaces";
 import { GanttFirebaseService } from "../services/gantt-firebase.service";
-import { Observable } from "rxjs";
+import * as moment from "moment";
 
 @Component({
   selector: "app-settings-screen",
@@ -9,11 +9,18 @@ import { Observable } from "rxjs";
   styleUrls: ["./settings-screen.component.scss"],
 })
 export class SettingsScreenComponent implements OnInit {
+  name = "";
   projData: IProj = { name: "" };
-  logoRefs: firebase.storage.Reference[];
-  fb;
-  logoRef: firebase.storage.Reference;
-  selectedLogoData: { name: string; url: string };
+  logoRefs: firebase.storage.Reference[] = []; // list to store data for dropdown
+  logoRef: firebase.storage.Reference; // selected data in dropdown
+  saving: { [x in keyof Required<IProj>]: boolean } = {
+    name: false,
+    logo: false,
+    projManager: false,
+    startDate: false,
+    description: false,
+  };
+  reloadLogo = true;
 
   constructor(private ganttFirebaseService: GanttFirebaseService) {}
 
@@ -21,7 +28,9 @@ export class SettingsScreenComponent implements OnInit {
     this.ganttFirebaseService
       .getProj(this.ganttFirebaseService.projId)
       .subscribe((res) => {
-        this.projData = res.payload.data();
+        const temp = res.payload.data();
+        this.projData = { ...temp };
+        this.name = temp.name;
         this.selectLogo();
       });
 
@@ -32,7 +41,7 @@ export class SettingsScreenComponent implements OnInit {
   }
 
   selectLogo() {
-    if (this.projData.logo && this.projData.logo.name) {
+    if (this.projData.logo && this.projData.logo.name && this.logoRefs.length) {
       this.logoRef = this.logoRefs.find(
         (logoRef) => logoRef.name === this.projData.logo.name
       );
@@ -42,27 +51,43 @@ export class SettingsScreenComponent implements OnInit {
   }
 
   onLogoChange() {
-    console.log(this.logoRef);
+    this.reloadLogo = true;
     if (this.logoRef) {
       this.loadLogo();
     } else {
-      this.selectedLogoData = { name: "", url: "" };
+      this.projData.logo = { name: "", url: "" };
     }
   }
 
   loadLogo() {
-    this.logoRef.getDownloadURL().then((url) => {
-      this.selectedLogoData = { name: this.logoRef.name, url };
-    });
+    this.reloadLogo &&
+      this.logoRef.getDownloadURL().then((url) => {
+        this.projData.logo = { name: this.logoRef.name, url };
+      });
   }
 
-  onLogoSave() {
-    console.log(this.selectedLogoData);
+  onSave(field: keyof IProj) {
+    if (field.toLowerCase().includes("date")) {
+      this.convertMomentToDate(field);
+    }
+
+    this.reloadLogo = false;
+    this.saving[field] = true;
+
     this.ganttFirebaseService
       .updateProj(this.ganttFirebaseService.projId, {
-        logo: this.selectedLogoData,
+        [field]: this.projData[field],
       })
-      .then((res) => console.log(res))
+      .then(() => (this.saving[field] = false))
       .catch(console.log);
+  }
+
+  convertMomentToDate(field: keyof IProj) {
+    this.projData[field] = ((this.projData[
+      field
+    ] as unknown) as moment.Moment).format("YYYY-MM-DD") as string & {
+      name: string;
+      url: string;
+    };
   }
 }

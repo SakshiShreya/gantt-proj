@@ -1,5 +1,10 @@
 @import "../../../assets/scss/variables";
 
+.back {
+  font-size: 18px;
+  height: 18px;
+}
+
 .mat-card {
   margin: 13px;
 
@@ -30,4 +35,19 @@
   display: inline-block;
   vertical-align: middle;
   margin-left: 16px;
+}
+
+.gen-form {
+  margin-top: 32px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+
+  .single-field {
+    margin-right: 32px;
+
+    @media (max-width: 485px) {
+      margin-right: 0;
+    }
+  }
 }
