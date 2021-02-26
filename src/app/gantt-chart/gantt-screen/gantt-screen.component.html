@@ -1,14 +1,38 @@
+<mat-toolbar>
+  <button mat-raised-button color="primary" (click)="openForm()">
+    Add task
+  </button>
+
+  <span class="spacer"></span>
+
+  <a mat-icon-button routerLink="settings" class="edit-cont"><mat-icon class="edit">edit</mat-icon></a>
+</mat-toolbar>
+
 <mat-card>
-  <h2 class="mat-title">{{ projData?.name }}</h2>
+  <div class="head">
+    <div class="logo" *ngIf="projData?.logo">
+      <img [src]="projData.logo.url" [alt]="projData.logo.name" />
+    </div>
+    <h2 class="mat-title">{{ projData?.name }}</h2>
+  </div>
 
-  <mat-toolbar>
-    <button mat-raised-button color="primary" (click)="openForm()">
-      Add task
-    </button>
+  <div class="meta">
+    <div class="col">
+      <h3 class="title">Project Manager</h3>
+      <p class="data">{{ projData.projManager || "--" }}</p>
+    </div>
+    <div class="col">
+      <h3 class="title">Start Date</h3>
+      <p class="data">{{ projData.startDate || "--" }}</p>
+    </div>
+  </div>
+  <div class="meta">
+    <div>
+      <h3 class="title">Description</h3>
+      <p class="data">{{ projData.description || "--" }}</p>
+    </div>
+  </div>
 
-    <span class="spacer"></span>
-  </mat-toolbar>
-  
   <app-chart-cont
     *ngIf="ganttDataRaw.length"
     [chartDataRaw]="ganttDataRaw"

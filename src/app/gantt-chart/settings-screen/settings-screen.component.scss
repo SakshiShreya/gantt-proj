@@ -1,0 +1,53 @@
+@import "../../../assets/scss/variables";
+
+.back {
+  font-size: 18px;
+  height: 18px;
+}
+
+.mat-card {
+  margin: 13px;
+
+  @media (max-width: $mobile) {
+    margin: 13px 0;
+  }
+}
+
+.single-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.logo-cont {
+  margin-bottom: 16px;
+}
+
+.logo {
+  max-height: 180px;
+  max-width: 100%;
+}
+
+.save-btn {
+  display: block;
+}
+
+.logo-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 16px;
+}
+
+.gen-form {
+  margin-top: 32px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+
+  .single-field {
+    margin-right: 32px;
+
+    @media (max-width: 485px) {
+      margin-right: 0;
+    }
+  }
+}

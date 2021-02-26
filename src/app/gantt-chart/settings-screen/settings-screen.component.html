@@ -1,0 +1,144 @@
+<mat-toolbar>
+  <a mat-button routerLink=".."><mat-icon class="back">arrow_back</mat-icon> Back</a>
+</mat-toolbar>
+
+<mat-card>
+  <h2 class="mat-title">
+    {{ name ? name + " Settings" : "" }}
+  </h2>
+
+  <!-- logo -->
+  <form class="logo-form" #logoForm="ngForm" *ngIf="logoRefs.length">
+    <mat-form-field class="single-field">
+      <mat-label>Logo</mat-label>
+      <mat-select
+        [(ngModel)]="logoRef"
+        (selectionChange)="onLogoChange()"
+        name="logoRef"
+      >
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let logoRef of logoRefs" [value]="logoRef">
+          {{ logoRef.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div
+      *ngIf="logoRef && projData.logo && projData.logo.url"
+      class="logo-cont"
+    >
+      <h4 class="mat-h4">Logo preview:</h4>
+      <img [src]="projData.logo.url" [alt]="projData.logo.name" class="logo" />
+    </div>
+
+    <div class="save-btn">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSave('logo')"
+        [disabled]="logoRef && projData.logo && !projData.logo.name"
+      >
+        Save
+      </button>
+      <mat-spinner
+        *ngIf="logoRef && projData.logo && !projData.logo.name"
+        diameter="20"
+        class="logo-spinner"
+      ></mat-spinner>
+    </div>
+  </form>
+
+  <!-- Name -->
+  <form class="gen-form" #nameForm="ngForm">
+    <mat-form-field class="single-field">
+      <input
+        matInput
+        placeholder="Project Name"
+        [(ngModel)]="projData.name"
+        name="name"
+      />
+    </mat-form-field>
+
+    <div class="save-btn">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSave('name')"
+        [disabled]="saving.name"
+      >
+        Save
+      </button>
+      <mat-spinner
+        *ngIf="saving.name"
+        diameter="20"
+        class="logo-spinner"
+      ></mat-spinner>
+    </div>
+  </form>
+
+  <!-- Start Date -->
+  <form class="gen-form" #startDateForm="ngForm">
+    <mat-form-field class="single-field">
+      <mat-label>Start Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="startDatePicker"
+        [(ngModel)]="projData.startDate"
+        name="startDate"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="startDatePicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #startDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <div class="save-btn">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSave('startDate')"
+        [disabled]="saving.startDate"
+      >
+        Save
+      </button>
+      <mat-spinner
+        *ngIf="saving.startDate"
+        diameter="20"
+        class="logo-spinner"
+      ></mat-spinner>
+    </div>
+  </form>
+
+  <!-- Description -->
+  <form class="gen-form" #descForm="ngForm">
+    <mat-form-field class="single-field">
+      <textarea
+        matInput
+        placeholder="Description"
+        [(ngModel)]="projData.description"
+        name="description"
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+      ></textarea>
+    </mat-form-field>
+
+    <div class="save-btn">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSave('description')"
+        [disabled]="saving.description"
+      >
+        Save
+      </button>
+      <mat-spinner
+        *ngIf="saving.description"
+        diameter="20"
+        class="logo-spinner"
+      ></mat-spinner>
+    </div>
+  </form>
+</mat-card>

@@ -16,6 +16,13 @@ export class GanttFirebaseService {
       .snapshotChanges();
   }
 
+  updateProj(projId: string, projData: Partial<IProj>) {
+    return this.fireStore
+      .collection("gantt-data")
+      .doc<IProj>(projId)
+      .update(projData);
+  }
+
   getTasks(projId: string) {
     return this.fireStore
       .collection("gantt-data")
@@ -98,5 +105,10 @@ export class GanttFirebaseService {
       .collection("Tasks")
       .doc(taskData.id)
       .update({ subtasks });
+  }
+
+  getAllLogos() {
+    let logosRef = firebase.storage().ref("logos");
+    return logosRef.listAll();
   }
 }
