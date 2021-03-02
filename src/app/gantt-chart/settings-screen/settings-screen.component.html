@@ -51,11 +51,12 @@
   <!-- Name -->
   <form class="gen-form" #nameForm="ngForm">
     <mat-form-field class="single-field">
+      <mat-label>Project Name</mat-label>
       <input
         matInput
-        placeholder="Project Name"
         [(ngModel)]="projData.name"
         name="name"
+        required
       />
     </mat-form-field>
 
@@ -85,6 +86,7 @@
         [matDatepicker]="startDatePicker"
         [(ngModel)]="projData.startDate"
         name="startDate"
+        required
       />
       <mat-datepicker-toggle
         matSuffix
@@ -104,6 +106,35 @@
       </button>
       <mat-spinner
         *ngIf="saving.startDate"
+        diameter="20"
+        class="logo-spinner"
+      ></mat-spinner>
+    </div>
+  </form>
+
+  <!-- Project manager -->
+  <form class="gen-form" #managerForm="ngForm">
+    <mat-form-field class="single-field">
+      <input
+        matInput
+        placeholder="Project Manager"
+        [(ngModel)]="projData.projManager"
+        name="projManager"
+        required
+      />
+    </mat-form-field>
+
+    <div class="save-btn">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSave('projManager')"
+        [disabled]="saving.projManager"
+      >
+        Save
+      </button>
+      <mat-spinner
+        *ngIf="saving.projManager"
         diameter="20"
         class="logo-spinner"
       ></mat-spinner>
