@@ -5,31 +5,33 @@
 
   <span class="spacer"></span>
 
-  <a mat-icon-button routerLink="settings" class="edit-cont"><mat-icon class="edit">edit</mat-icon></a>
+  <a mat-icon-button routerLink="settings" class="edit-cont">
+    <mat-icon class="edit">edit</mat-icon>
+  </a>
 </mat-toolbar>
 
 <mat-card>
-  <div class="head">
-    <div class="logo" *ngIf="projData?.logo">
+  <div class="head" [ngClass]="{ loading: loading }">
+    <div class="logo" *ngIf="projData.logo">
       <img [src]="projData.logo.url" [alt]="projData.logo.name" />
     </div>
-    <h2 class="mat-title">{{ projData?.name }}</h2>
+    <h2 class="mat-title">{{ projData.name }}</h2>
   </div>
 
   <div class="meta">
     <div class="col">
       <h3 class="title">Project Manager</h3>
-      <p class="data">{{ projData.projManager || "--" }}</p>
+      <p class="data" [ngClass]="{ loading: loading }">{{ projData.projManager }}</p>
     </div>
     <div class="col">
       <h3 class="title">Start Date</h3>
-      <p class="data">{{ projData.startDate || "--" }}</p>
+      <p class="data" [ngClass]="{ loading: loading }">{{ projData.startDate }}</p>
     </div>
   </div>
-  <div class="meta">
+  <div class="meta" *ngIf="projData.description">
     <div>
       <h3 class="title">Description</h3>
-      <p class="data">{{ projData.description || "--" }}</p>
+      <p class="data">{{ projData.description }}</p>
     </div>
   </div>
 
@@ -37,4 +39,8 @@
     *ngIf="ganttDataRaw.length"
     [chartDataRaw]="ganttDataRaw"
   ></app-chart-cont>
+  <mat-spinner
+    *ngIf="!ganttDataRaw.length"
+    class="spinner"
+  ></mat-spinner>
 </mat-card>
