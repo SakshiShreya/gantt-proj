@@ -12,6 +12,7 @@ import { TaskFormComponent } from "../task-components/task-form/task-form.compon
 export class GanttScreenComponent implements OnInit {
   projData: IProj = { name: "" };
   ganttDataRaw: Array<ITaskRaw> = [];
+  loading = true;
 
   constructor(
     private ganttFirebaseService: GanttFirebaseService,
@@ -22,6 +23,7 @@ export class GanttScreenComponent implements OnInit {
     this.ganttFirebaseService
       .getProj(this.ganttFirebaseService.projId)
       .subscribe((res) => {
+        this.loading = false;
         this.projData = res.payload.data();
       });
 

@@ -3,6 +3,12 @@
 .head {
   display: flex;
   align-items: center;
+
+  &.loading {
+    height: 32px;
+    margin-bottom: 16px;
+    max-width: 400px;
+  }
 }
 
 .edit-cont {
@@ -68,5 +74,15 @@
 
   .data {
     margin-top: 0;
+    margin-bottom: 16px;
+
+    &.loading {
+      height: 19px;
+      max-width: 200px;
+    }
   }
+}
+
+.spinner {
+  margin: 16px auto;
 }
