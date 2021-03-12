@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { IProj } from "../interfaces/chartInterfaces";
-import { GanttFirebaseService } from "../services/gantt-firebase.service";
+import { GanttFirebaseService } from "../../shared/services/gantt-firebase.service";
 import * as moment from "moment";
 
 @Component({

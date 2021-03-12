@@ -13,7 +13,7 @@ import { SubtaskFormComponent } from "../../subtask-components/subtask-form/subt
 import { DeleteTaskComponent } from "../../task-components/delete-task/delete-task.component";
 import { DeleteSubtaskComponent } from "../../subtask-components/delete-subtask/delete-subtask.component";
 import { GanttChartService } from "../../services/gantt-chart.service";
-import { GanttFirebaseService } from "../../services/gantt-firebase.service";
+import { GanttFirebaseService } from "../../../shared/services/gantt-firebase.service";
 import { forkJoin } from "rxjs";
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { GanttFirebaseService } from "../../services/gantt-firebase.service";
+import { GanttFirebaseService } from "../../../shared/services/gantt-firebase.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { ITaskRaw } from "../../interfaces/chartInterfaces";
 import * as moment from "moment";

@@ -1,4 +1,4 @@
-import { IProj, ITaskRaw, ISubtaskRaw } from "../interfaces/chartInterfaces";
+import { IProj, ITaskRaw, ISubtaskRaw } from "../../gantt-chart/interfaces/chartInterfaces";
 import { AngularFirestore } from "@angular/fire/firestore";
 import * as firebase from "firebase/app";
 

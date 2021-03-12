@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { GanttScreenComponent } from "./gantt-screen/gantt-screen.component";
-import { GanttChartRoutingModule } from "./gantt-chart-routing.module";
-import { AppMaterialModule } from "./../app-material.module";
+import { GanttChartRoutingModule } from "./gantt-chart.routing";
+import { AppMaterialModule } from "../shared/modules/app-material.module";
 import { ChartContComponent } from "./chart-cont/chart-cont.component";
-import { GanttFirebaseService } from "./services/gantt-firebase.service";
+import { GanttFirebaseService } from "../shared/services/gantt-firebase.service";
 import { TaskFormComponent } from "./task-components/task-form/task-form.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { SubtaskFormComponent } from "./subtask-components/subtask-form/subtask-form.component";

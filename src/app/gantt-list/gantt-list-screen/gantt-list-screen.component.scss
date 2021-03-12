@@ -1,0 +1,9 @@
+@import "../../../assets/scss/variables";
+
+.mat-card {
+  margin: 13px;
+
+  @media (max-width: $mobile) {
+    margin: 13px 0;
+  }
+}

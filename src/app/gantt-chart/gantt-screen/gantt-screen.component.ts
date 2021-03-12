@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { GanttFirebaseService } from "../services/gantt-firebase.service";
+import { GanttFirebaseService } from "../../shared/services/gantt-firebase.service";
 import { IProj, ITaskRaw } from "../interfaces/chartInterfaces";
 import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../task-components/task-form/task-form.component";

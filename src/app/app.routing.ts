@@ -10,7 +10,12 @@ const routes: Routes = [
         (m) => m.GanttChartModule
       ),
   },
-  { path: "", redirectTo: "/chart", pathMatch: "full" },
+  {
+    path: "charts",
+    loadChildren: () =>
+      import("./gantt-list/gantt-list.module").then((m) => m.GanttListModule),
+  },
+  { path: "", redirectTo: "/charts", pathMatch: "full" },
 ];
 
 @NgModule({
