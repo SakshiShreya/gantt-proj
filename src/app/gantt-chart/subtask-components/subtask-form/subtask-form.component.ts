@@ -24,27 +24,26 @@ export class SubtaskFormComponent implements OnInit {
     private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<SubtaskFormComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { parent: ITaskRaw; subtaskId?: number }
+    public data: { projId: string; parent: ITaskRaw; subtaskId?: number }
   ) {}
 
   ngOnInit() {
-    if (this.data.subtaskId !== undefined) {
+    const { parent, subtaskId } = this.data;
+    const formData = parent.subtasks[subtaskId];
+
+    if (subtaskId !== undefined) {
       this.subtaskForm.patchValue({
-        name: this.data.parent.subtasks[this.data.subtaskId].name,
-        owner: this.data.parent.subtasks[this.data.subtaskId].owner,
-        startDate: moment(
-          this.data.parent.subtasks[this.data.subtaskId].startDate
-        ),
-        duration: this.data.parent.subtasks[this.data.subtaskId].duration
-          ? this.data.parent.subtasks[this.data.subtaskId].duration[0]
-          : 0,
-        percentComplete:
-          this.data.parent.subtasks[this.data.subtaskId].percentComplete || 0,
+        name: formData.name,
+        owner: formData.owner,
+        startDate: moment(formData.startDate),
+        duration: formData.duration ? formData.duration[0] : 0,
+        percentComplete: formData.percentComplete || 0,
       });
     }
   }
 
   onSubmit() {
+    const { projId, parent, subtaskId } = this.data;
     this.isSubmitButtonDisable = true;
     const submitData = { ...this.subtaskForm.value };
 
@@ -54,22 +53,13 @@ export class SubtaskFormComponent implements OnInit {
 
     submitData.duration = [submitData.duration, "days"];
 
-    if (this.data.subtaskId !== undefined) {
+    if (subtaskId !== undefined) {
       this.ganttFirebaseService
-        .updateSubtask(
-          this.ganttFirebaseService.projId,
-          this.data.parent,
-          this.data.subtaskId,
-          submitData
-        )
+        .updateSubtask(projId, parent, subtaskId, submitData)
         .then(() => this.dialogRef.close());
     } else {
       this.ganttFirebaseService
-        .postNewSubtask(
-          this.ganttFirebaseService.projId,
-          this.data.parent.id,
-          submitData
-        )
+        .postNewSubtask(projId, parent.id, submitData)
         .then(() => this.dialogRef.close());
     }
   }

@@ -5,6 +5,7 @@ import { IProj } from "src/app/shared/interfaces/ganttInterface";
 import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../task-components/task-form/task-form.component";
 import { Subscription } from "rxjs";
+import { ActivatedRoute, Params } from "@angular/router";
 
 @Component({
   selector: "app-gantt-screen",
@@ -15,24 +16,42 @@ export class GanttScreenComponent implements OnInit, OnDestroy {
   projData: IProj = { name: "" };
   ganttDataRaw: Array<ITaskRaw> = [];
   loading = true;
+  projId: string;
   projDataSubscription: Subscription;
   taskDataSubscription: Subscription;
+  routeSubscription: Subscription;
 
   constructor(
     private ganttFirebaseService: GanttFirebaseService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.routeSubscription = this.route.params.subscribe(({ id }: Params) => {
+      this.projId = id;
+      this.getData();
+    });
+  }
+
+  getData() {
+    // First unsubscribe if already subscribed for some other project id
+    if (this.projDataSubscription) {
+      this.projDataSubscription.unsubscribe();
+    }
+    if (this.taskDataSubscription) {
+      this.taskDataSubscription.unsubscribe();
+    }
+
     this.projDataSubscription = this.ganttFirebaseService
-      .getProj(this.ganttFirebaseService.projId)
+      .getProj(this.projId)
       .subscribe((res) => {
         this.loading = false;
         this.projData = res.payload.data();
       });
 
     this.taskDataSubscription = this.ganttFirebaseService
-      .getTasks(this.ganttFirebaseService.projId)
+      .getTasks(this.projId)
       .subscribe((res) => {
         this.ganttDataRaw = res
           .map((item) => ({
@@ -46,6 +65,7 @@ export class GanttScreenComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.projDataSubscription.unsubscribe();
     this.taskDataSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 
   openForm() {
@@ -55,6 +75,7 @@ export class GanttScreenComponent implements OnInit, OnDestroy {
       maxWidth: "550px",
       maxHeight: "100vh",
       data: {
+        projId: this.projId,
         nextId: this.ganttDataRaw[this.ganttDataRaw.length - 1].order + 1,
       },
     });

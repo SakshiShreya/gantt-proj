@@ -13,7 +13,7 @@ export class DeleteTaskComponent {
     private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<DeleteTaskComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { row: ITask }
+    public data: { projId: string; row: ITask }
   ) {}
 
   closePopup() {
@@ -22,7 +22,7 @@ export class DeleteTaskComponent {
 
   deleteTask() {
     this.ganttFirebaseService
-      .deleteTask(this.ganttFirebaseService.projId, this.data.row.id)
+      .deleteTask(this.data.projId, this.data.row.id)
       .then(() => this.dialogRef.close());
   }
 }

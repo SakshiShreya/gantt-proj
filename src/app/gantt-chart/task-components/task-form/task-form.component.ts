@@ -18,7 +18,8 @@ export class TaskFormComponent implements OnInit {
   constructor(
     private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<TaskFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { row?: ITaskRaw; nextId?: number }
+    @Inject(MAT_DIALOG_DATA)
+    public data: { projId: string; row?: ITaskRaw; nextId?: number }
   ) {}
 
   ngOnInit() {
@@ -36,16 +37,12 @@ export class TaskFormComponent implements OnInit {
     if (this.data.row) {
       // if row already exists, then update it
       this.ganttFirebaseService
-        .updateTask(
-          this.ganttFirebaseService.projId,
-          this.data.row.id,
-          submitData
-        )
+        .updateTask(this.data.projId, this.data.row.id, submitData)
         .then(() => this.dialogRef.close());
     } else {
       // otherwise create a new row
       this.ganttFirebaseService
-        .postNewTask(this.ganttFirebaseService.projId, {
+        .postNewTask(this.data.projId, {
           ...submitData,
           order: this.data.nextId,
         })

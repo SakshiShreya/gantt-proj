@@ -100,7 +100,6 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     this.chartData = this.parseData();
-    console.log(this.chartData);
   }
 
   ngOnInit() {

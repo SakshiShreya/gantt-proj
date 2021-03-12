@@ -3,6 +3,7 @@ import { IProj } from "src/app/shared/interfaces/ganttInterface";
 import { GanttFirebaseService } from "../../shared/services/gantt-firebase.service";
 import * as moment from "moment";
 import { Subscription } from "rxjs";
+import { ActivatedRoute, Params } from "@angular/router";
 
 @Component({
   selector: "app-settings-screen",
@@ -23,20 +24,20 @@ export class SettingsScreenComponent implements OnInit, OnDestroy {
   };
   reloadLogo = true;
   loading = true;
+  projId: string;
   projDataSubscription: Subscription;
+  routeSubscription: Subscription;
 
-  constructor(private ganttFirebaseService: GanttFirebaseService) {}
+  constructor(
+    private ganttFirebaseService: GanttFirebaseService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.projDataSubscription = this.ganttFirebaseService
-      .getProj(this.ganttFirebaseService.projId)
-      .subscribe((res) => {
-        const temp = res.payload.data();
-        this.projData = { ...temp };
-        this.name = temp.name;
-        this.selectLogo();
-        this.loading = false;
-      });
+    this.routeSubscription = this.route.params.subscribe(({ id }: Params) => {
+      this.projId = id;
+      this.getData();
+    });
 
     this.ganttFirebaseService.getAllLogos().then(({ items }) => {
       this.logoRefs = items;
@@ -44,8 +45,26 @@ export class SettingsScreenComponent implements OnInit, OnDestroy {
     });
   }
 
+  getData() {
+    // First unsubscribe if already subscribed for some other project id
+    if (this.projDataSubscription) {
+      this.projDataSubscription.unsubscribe();
+    }
+
+    this.projDataSubscription = this.ganttFirebaseService
+      .getProj(this.projId)
+      .subscribe((res) => {
+        const temp = res.payload.data();
+        this.projData = { ...temp };
+        this.name = temp.name;
+        this.selectLogo();
+        this.loading = false;
+      });
+  }
+
   ngOnDestroy() {
     this.projDataSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 
   selectLogo() {
@@ -83,7 +102,7 @@ export class SettingsScreenComponent implements OnInit, OnDestroy {
     this.saving[field] = true;
 
     this.ganttFirebaseService
-      .updateProj(this.ganttFirebaseService.projId, {
+      .updateProj(this.projId, {
         [field]: this.projData[field],
       })
       .then(() => (this.saving[field] = false))

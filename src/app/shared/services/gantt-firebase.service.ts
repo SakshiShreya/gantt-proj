@@ -9,10 +9,6 @@ import * as firebase from "firebase/app";
 export class GanttFirebaseService {
   constructor(private fireStore: AngularFirestore) {}
 
-  get projId() {
-    return "GiJfbLcXDAfSXpv9ndac";
-  }
-
   getProj(projId: string) {
     return this.fireStore
       .collection("gantt-data")
