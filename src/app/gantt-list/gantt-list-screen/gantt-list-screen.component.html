@@ -40,7 +40,7 @@
   <!-- Mobile view -->
 
   <ng-container *ngIf="isMobile">
-    <mat-card *ngFor="let row of list">
+    <mat-card *ngFor="let row of list" (click)="rowClick(row)">
       <div class="row1 mat-h2">{{ row.name }}</div>
       <div class="row2">
         <div class="col">
