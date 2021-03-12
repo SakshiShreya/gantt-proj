@@ -8,6 +8,10 @@
   right: 0;
 }
 
+.sidenav-container {
+  flex: 1;
+}
+
 .sidenav {
   width: 200px;
 }
@@ -18,4 +22,8 @@
 
 .nav-icon {
   margin-right: 8px; 
+}
+
+.route-active {
+  background: #eeeeee;
 }

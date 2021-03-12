@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
   ITask,
   ISubtask,
@@ -7,17 +7,19 @@ import {
 } from "../../interfaces/chartInterfaces";
 import * as moment from "moment";
 import { GanttChartService } from "../../services/gantt-chart.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-chart",
   templateUrl: "./chart.component.html",
   styleUrls: ["../table/table.component.scss", "./chart.component.scss"],
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnInit, OnDestroy {
   dates: Array<moment.Moment> = [];
   data: Array<ITask> = [];
   chartData: Array<ITaskChart> = [];
   colWidth = 50;
+  dataSubscription: Subscription;
 
   constructor(private ganttChartService: GanttChartService) {}
 
@@ -98,7 +100,6 @@ export class ChartComponent implements OnInit {
     }
 
     this.chartData = this.parseData();
-    console.log(this.chartData);
   }
 
   ngOnInit() {
@@ -108,9 +109,15 @@ export class ChartComponent implements OnInit {
       this.updateGanttChart();
     }
 
-    this.ganttChartService.getParseData().subscribe((data) => {
-      this.data = data;
-      this.updateGanttChart();
-    });
+    this.dataSubscription = this.ganttChartService
+      .getParseData()
+      .subscribe((data) => {
+        this.data = data;
+        this.updateGanttChart();
+      });
+  }
+
+  ngOnDestroy() {
+    this.dataSubscription.unsubscribe();
   }
 }

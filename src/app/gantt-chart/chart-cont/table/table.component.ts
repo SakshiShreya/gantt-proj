@@ -13,8 +13,9 @@ import { SubtaskFormComponent } from "../../subtask-components/subtask-form/subt
 import { DeleteTaskComponent } from "../../task-components/delete-task/delete-task.component";
 import { DeleteSubtaskComponent } from "../../subtask-components/delete-subtask/delete-subtask.component";
 import { GanttChartService } from "../../services/gantt-chart.service";
-import { GanttFirebaseService } from "../../services/gantt-firebase.service";
+import { GanttFirebaseService } from "../../../shared/services/gantt-firebase.service";
 import { forkJoin } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-table",
@@ -29,7 +30,8 @@ export class TableComponent implements OnChanges {
   constructor(
     public dialog: MatDialog,
     private ganttChartService: GanttChartService,
-    private ganttFirebaseService: GanttFirebaseService
+    private ganttFirebaseService: GanttFirebaseService,
+    private route: ActivatedRoute
   ) {}
 
   prepareSubtask({
@@ -68,58 +70,68 @@ export class TableComponent implements OnChanges {
   }
 
   editTask(row: ITaskRaw) {
+    const projId = this.route.snapshot.params.id;
+
     this.dialog.open(TaskFormComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { row },
+      data: { projId, row },
     });
   }
 
   deleteTask(row: ITaskRaw) {
+    const projId = this.route.snapshot.params.id;
+
     this.dialog.open(DeleteTaskComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { row },
+      data: { projId, row },
     });
   }
 
   addSubtask(row: ITaskRaw) {
+    const projId = this.route.snapshot.params.id;
+
     this.dialog.open(SubtaskFormComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { parent: row },
+      data: { projId, parent: row },
     });
   }
 
   editSubtask(taskId: string, subtaskId: number) {
+    const projId = this.route.snapshot.params.id;
+
     this.dialog.open(SubtaskFormComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { parent: this.chartDataRaw[taskId], subtaskId },
+      data: { projId, parent: this.chartDataRaw[taskId], subtaskId },
     });
   }
 
   deleteSubtask(taskId: string, subtaskId: number) {
+    const projId = this.route.snapshot.params.id;
     this.dialog.open(DeleteSubtaskComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { parent: this.chartDataRaw[taskId], subtaskId },
+      data: { projId, parent: this.chartDataRaw[taskId], subtaskId },
     });
   }
 
   moveTasks(taskIndex: number, moveDirection: EMove) {
     const currTask = this.chartDataRaw[taskIndex];
     let otherTask: ITaskRaw = null;
+    const projId = this.route.snapshot.params.id;
 
     if (moveDirection === EMove.UP) {
       // previous task
@@ -130,13 +142,13 @@ export class TableComponent implements OnChanges {
     }
 
     const currUpdate = this.ganttFirebaseService.updateTask(
-      this.ganttFirebaseService.projId,
+      projId,
       currTask.id,
       { order: otherTask.order }
     );
 
     const otherUpdate = this.ganttFirebaseService.updateTask(
-      this.ganttFirebaseService.projId,
+      projId,
       otherTask.id,
       { order: currTask.order }
     );
@@ -148,10 +160,11 @@ export class TableComponent implements OnChanges {
 
   moveSubtasks(taskIndex: number, subtaskIndex: number, moveDirection: EMove) {
     let subtasks = this.chartDataRaw[taskIndex].subtasks;
+    const projId = this.route.snapshot.params.id;
 
     const removeSubtask = (): Promise<void> => {
       return this.ganttFirebaseService.deleteSubtask(
-        this.ganttFirebaseService.projId,
+        projId,
         this.chartDataRaw[taskIndex],
         subtaskIndex
       );
@@ -165,11 +178,7 @@ export class TableComponent implements OnChanges {
 
     const updateTask = () => {
       this.ganttFirebaseService
-        .updateTask(
-          this.ganttFirebaseService.projId,
-          this.chartDataRaw[taskIndex].id,
-          { subtasks }
-        )
+        .updateTask(projId, this.chartDataRaw[taskIndex].id, { subtasks })
         .then(() => {
           /* do nothing for now */
         });
@@ -185,7 +194,7 @@ export class TableComponent implements OnChanges {
         const prevSubtasks = this.chartDataRaw[taskIndex - 1].subtasks || [];
         prevSubtasks.push(subtasks[subtaskIndex]);
         const add = this.ganttFirebaseService.updateTask(
-          this.ganttFirebaseService.projId,
+          projId,
           this.chartDataRaw[taskIndex - 1].id,
           { subtasks: prevSubtasks }
         );
@@ -210,7 +219,7 @@ export class TableComponent implements OnChanges {
         const nextSubtasks = this.chartDataRaw[taskIndex + 1].subtasks || [];
         nextSubtasks.unshift(subtasks[subtaskIndex]);
         const add = this.ganttFirebaseService.updateTask(
-          this.ganttFirebaseService.projId,
+          projId,
           this.chartDataRaw[taskIndex + 1].id,
           { subtasks: nextSubtasks }
         );

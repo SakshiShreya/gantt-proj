@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { GanttFirebaseService } from "../../services/gantt-firebase.service";
+import { GanttFirebaseService } from "../../../shared/services/gantt-firebase.service";
 import { ITask } from "../../interfaces/chartInterfaces";
 
 @Component({
@@ -13,7 +13,7 @@ export class DeleteTaskComponent {
     private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<DeleteTaskComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { row: ITask }
+    public data: { projId: string; row: ITask }
   ) {}
 
   closePopup() {
@@ -22,7 +22,7 @@ export class DeleteTaskComponent {
 
   deleteTask() {
     this.ganttFirebaseService
-      .deleteTask(this.ganttFirebaseService.projId, this.data.row.id)
+      .deleteTask(this.data.projId, this.data.row.id)
       .then(() => this.dialogRef.close());
   }
 }
