@@ -1,18 +1,22 @@
-import { Component, OnInit } from "@angular/core";
-import { GanttFirebaseService } from "../../shared/services/gantt-firebase.service";
-import { IProj, ITaskRaw } from "../interfaces/chartInterfaces";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { GanttFirebaseService } from "src/app/shared/services/gantt-firebase.service";
+import { ITaskRaw } from "../interfaces/chartInterfaces";
+import { IProj } from "src/app/shared/interfaces/ganttInterface";
 import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../task-components/task-form/task-form.component";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-gantt-screen",
   templateUrl: "./gantt-screen.component.html",
   styleUrls: ["./gantt-screen.component.scss"],
 })
-export class GanttScreenComponent implements OnInit {
+export class GanttScreenComponent implements OnInit, OnDestroy {
   projData: IProj = { name: "" };
   ganttDataRaw: Array<ITaskRaw> = [];
   loading = true;
+  projDataSubscription: Subscription;
+  taskDataSubscription: Subscription;
 
   constructor(
     private ganttFirebaseService: GanttFirebaseService,
@@ -20,14 +24,14 @@ export class GanttScreenComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.ganttFirebaseService
+    this.projDataSubscription = this.ganttFirebaseService
       .getProj(this.ganttFirebaseService.projId)
       .subscribe((res) => {
         this.loading = false;
         this.projData = res.payload.data();
       });
 
-    this.ganttFirebaseService
+    this.taskDataSubscription = this.ganttFirebaseService
       .getTasks(this.ganttFirebaseService.projId)
       .subscribe((res) => {
         this.ganttDataRaw = res
@@ -37,6 +41,11 @@ export class GanttScreenComponent implements OnInit {
           }))
           .sort((a, b) => a.order - b.order);
       });
+  }
+
+  ngOnDestroy() {
+    this.projDataSubscription.unsubscribe();
+    this.taskDataSubscription.unsubscribe();
   }
 
   openForm() {

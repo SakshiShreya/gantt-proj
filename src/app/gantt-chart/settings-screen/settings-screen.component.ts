@@ -1,14 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import { IProj } from "../interfaces/chartInterfaces";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { IProj } from "src/app/shared/interfaces/ganttInterface";
 import { GanttFirebaseService } from "../../shared/services/gantt-firebase.service";
 import * as moment from "moment";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-settings-screen",
   templateUrl: "./settings-screen.component.html",
   styleUrls: ["./settings-screen.component.scss"],
 })
-export class SettingsScreenComponent implements OnInit {
+export class SettingsScreenComponent implements OnInit, OnDestroy {
   name = "";
   projData: IProj = { name: "" };
   logoRefs: firebase.storage.Reference[] = []; // list to store data for dropdown
@@ -22,11 +23,12 @@ export class SettingsScreenComponent implements OnInit {
   };
   reloadLogo = true;
   loading = true;
+  projDataSubscription: Subscription;
 
   constructor(private ganttFirebaseService: GanttFirebaseService) {}
 
   ngOnInit() {
-    this.ganttFirebaseService
+    this.projDataSubscription = this.ganttFirebaseService
       .getProj(this.ganttFirebaseService.projId)
       .subscribe((res) => {
         const temp = res.payload.data();
@@ -40,6 +42,10 @@ export class SettingsScreenComponent implements OnInit {
       this.logoRefs = items;
       this.selectLogo();
     });
+  }
+
+  ngOnDestroy() {
+    this.projDataSubscription.unsubscribe();
   }
 
   selectLogo() {

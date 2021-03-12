@@ -1,4 +1,8 @@
-import { IProj, ITaskRaw, ISubtaskRaw } from "../../gantt-chart/interfaces/chartInterfaces";
+import {
+  ITaskRaw,
+  ISubtaskRaw,
+} from "../../gantt-chart/interfaces/chartInterfaces";
+import { IProj } from "../interfaces/ganttInterface";
 import { AngularFirestore } from "@angular/fire/firestore";
 import * as firebase from "firebase/app";
 
@@ -14,6 +18,10 @@ export class GanttFirebaseService {
       .collection("gantt-data")
       .doc<IProj>(projId)
       .snapshotChanges();
+  }
+
+  getProjList() {
+    return this.fireStore.collection<IProj>("gantt-data").snapshotChanges();
   }
 
   updateProj(projId: string, projData: Partial<IProj>) {

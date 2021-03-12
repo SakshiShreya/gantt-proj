@@ -1,9 +1,33 @@
 @import "../../../assets/scss/variables";
 
-.mat-card {
+.container {
   margin: 13px;
 
   @media (max-width: $mobile) {
     margin: 13px 0;
   }
+}
+
+.table {
+  width: 100%;
+}
+
+.row2 {
+  display: flex;
+}
+
+.col {
+  width: 100%;
+}
+
+.title {
+  margin: 0;
+}
+
+.data {
+  margin: 0 0 8px;
+}
+
+.red {
+  color: #f44336;
 }

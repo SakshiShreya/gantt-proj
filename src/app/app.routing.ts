@@ -4,7 +4,7 @@ import { PreloadAllModules } from "@angular/router";
 
 const routes: Routes = [
   {
-    path: "chart",
+    path: "chart/:id",
     loadChildren: () =>
       import("./gantt-chart/gantt-chart.module").then(
         (m) => m.GanttChartModule
@@ -15,6 +15,7 @@ const routes: Routes = [
     loadChildren: () =>
       import("./gantt-list/gantt-list.module").then((m) => m.GanttListModule),
   },
+  { path: "**", redirectTo: "/charts" },
   { path: "", redirectTo: "/charts", pathMatch: "full" },
 ];
 
