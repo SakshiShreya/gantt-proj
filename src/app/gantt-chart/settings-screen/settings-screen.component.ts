@@ -21,6 +21,7 @@ export class SettingsScreenComponent implements OnInit {
     description: false,
   };
   reloadLogo = true;
+  loading = true;
 
   constructor(private ganttFirebaseService: GanttFirebaseService) {}
 
@@ -32,6 +33,7 @@ export class SettingsScreenComponent implements OnInit {
         this.projData = { ...temp };
         this.name = temp.name;
         this.selectLogo();
+        this.loading = false;
       });
 
     this.ganttFirebaseService.getAllLogos().then(({ items }) => {
