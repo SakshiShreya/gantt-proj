@@ -1,9 +1,22 @@
-<div class="mat-elevation-z1 chart-container">
-  <div class="gantt-table-container mat-elevation-z1">
+<div class="mat-elevation-z1 chart-container" #chartContainer>
+  <div
+    class="gantt-table-container mat-elevation-z1"
+    [ngStyle]="{ width: width }"
+  >
     <app-table [chartDataRaw]="chartDataRaw"></app-table>
   </div>
 
-  <div class="gantt-chart-cintainer">
+  <div
+    class="gantt-chart-cintainer"
+    [ngStyle]="{ width: 'calc(100% - ' + width + ')' }"
+  >
     <app-chart></app-chart>
   </div>
+
+  <div
+    class="resize-handle"
+    [ngStyle]="{ left: width }"
+    (mousedown)="startDragging($event)"
+    (pointerdown)="startDragging($event)"
+  ></div>
 </div>

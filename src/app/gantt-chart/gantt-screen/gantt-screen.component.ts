@@ -6,6 +6,7 @@ import { MatDialog } from "@angular/material";
 import { TaskFormComponent } from "../task-components/task-form/task-form.component";
 import { Subscription } from "rxjs";
 import { ActivatedRoute, Params } from "@angular/router";
+import { BreakpointObserver } from "@angular/cdk/layout";
 
 @Component({
   selector: "app-gantt-screen",
@@ -17,15 +18,22 @@ export class GanttScreenComponent implements OnInit, OnDestroy {
   ganttDataRaw: Array<ITaskRaw> = [];
   loading = true;
   projId: string;
+  isPortrait = false;
   projDataSubscription: Subscription;
   taskDataSubscription: Subscription;
   routeSubscription: Subscription;
+  breakpointSubscription: Subscription;
 
   constructor(
     private ganttFirebaseService: GanttFirebaseService,
     public dialog: MatDialog,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    breakpointObserver: BreakpointObserver
+  ) {
+    breakpointObserver.observe(["(orientation:portrait)"]).subscribe((res) => {
+      this.isPortrait = res.matches;
+    });
+  }
 
   ngOnInit() {
     this.routeSubscription = this.route.params.subscribe(({ id }: Params) => {
@@ -66,6 +74,7 @@ export class GanttScreenComponent implements OnInit, OnDestroy {
     this.projDataSubscription.unsubscribe();
     this.taskDataSubscription.unsubscribe();
     this.routeSubscription.unsubscribe();
+    this.breakpointSubscription.unsubscribe();
   }
 
   openForm() {
