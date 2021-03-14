@@ -34,13 +34,17 @@
       mat-row
       *matRowDef="let row; columns: displayedColumns"
       (click)="rowClick(row)"
+      class="highlight"
     ></tr>
   </table>
 
   <!-- Mobile view -->
-
   <ng-container *ngIf="isMobile">
-    <mat-card *ngFor="let row of list" (click)="rowClick(row)">
+    <mat-card
+      *ngFor="let row of list"
+      (click)="rowClick(row)"
+      class="highlight"
+    >
       <div class="row1 mat-h2">{{ row.name }}</div>
       <div class="row2">
         <div class="col">
