@@ -18,7 +18,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
   2. environment.ts
 - Check `git status`. Please check that these two files should not come in `git status` as these are mentioned in gitignore. If you can see these two files, then you have probably created these files in the wrong folder. Delete them and follow the process properly.
 - In environment.prod.ts, copy the contents of environment1.prod.ts. Similarly in environment.ts, copy the contents of environment1.ts.
-- In both the files, replace the `firebaseConfig` object, with the object provided by me. (For contacting me, refer to the description on my [Profile page](https://github.com/SakshiShreya)
+- In both the files, replace the `firebaseConfig` object, with the object provided by me. (For contacting me, refer to the description on my [Profile page](https://github.com/SakshiShreya).)
 - You are ready now. Please go ahead and run the development server.
 
 ## Development server
