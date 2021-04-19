@@ -30,7 +30,7 @@ export class GanttScreenComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     breakpointObserver: BreakpointObserver
   ) {
-    breakpointObserver.observe(["(orientation:portrait)"]).subscribe((res) => {
+    this.breakpointSubscription = breakpointObserver.observe(["(orientation:portrait)"]).subscribe((res) => {
       this.isPortrait = res.matches;
     });
   }
