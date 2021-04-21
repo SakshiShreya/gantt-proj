@@ -8,13 +8,20 @@ interface ITaskBase {
   name: string;
   id?: string;
   order: number;
+  isSubtaskPresent: boolean;
+  owner?: string;
+  duration?: [moment.DurationInputArg1, moment.DurationInputArg2];
+  percentComplete?: number;
 }
 
 export interface ITaskRaw extends ITaskBase {
+  startDate?: string;
   subtasks?: Array<ISubtaskRaw>;
 }
 
 export interface ITask extends ITaskBase {
+  startDate?: moment.Moment;
+  endDate?: moment.Moment;
   subtasks?: Array<ISubtask>;
 }
 

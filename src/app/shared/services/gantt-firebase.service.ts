@@ -60,6 +60,15 @@ export class GanttFirebaseService {
 
   // Feels like I have used set here and update otherwise
   // so that I can remember that we can use set also
+  updateTaskCompletely(projId: string, taskId: string, taskData: Partial<ITaskRaw>) {
+    return this.fireStore
+      .collection("gantt-data")
+      .doc(projId)
+      .collection("Tasks")
+      .doc(taskId)
+      .set(taskData, { merge: false });
+  }
+
   updateTask(projId: string, taskId: string, taskData: Partial<ITaskRaw>) {
     return this.fireStore
       .collection("gantt-data")

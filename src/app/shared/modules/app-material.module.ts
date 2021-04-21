@@ -14,6 +14,7 @@ import {
   MatListModule,
   MatProgressSpinnerModule,
   MatTableModule,
+  MatRadioModule,
 } from "@angular/material";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 
@@ -34,6 +35,7 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
     MatListModule,
     MatProgressSpinnerModule,
     MatTableModule,
+    MatRadioModule,
   ],
 })
 export class AppMaterialModule {}
