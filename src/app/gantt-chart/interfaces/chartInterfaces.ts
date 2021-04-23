@@ -27,7 +27,7 @@ export interface ITask extends ITaskBase {
   subtasks?: Array<ISubtask>;
 }
 
-export interface ITaskChart extends ITaskBase, IChartExtra {
+export interface ITaskChart extends ITask, IChartExtra {
   subtasks?: Array<ISubtaskChart>;
 }
 

@@ -27,27 +27,31 @@ export class ChartComponent implements OnInit, OnDestroy {
     let minStartDate: moment.Moment;
     let maxEndDate: moment.Moment;
 
-    data.forEach(
-      (task) =>
-        task.subtasks &&
-        task.subtasks.forEach(({ startDate, endDate }) => {
-          if (!minStartDate || startDate.isBefore(minStartDate)) {
-            minStartDate = moment(startDate);
-          }
+    function calcBoundary(startDate: moment.Moment, endDate: moment.Moment) {
+      if (!minStartDate || startDate.isBefore(minStartDate)) {
+        minStartDate = moment(startDate);
+      }
 
-          if (!minStartDate || endDate.isBefore(minStartDate)) {
-            minStartDate = moment(endDate);
-          }
+      if (!minStartDate || endDate.isBefore(minStartDate)) {
+        minStartDate = moment(endDate);
+      }
 
-          if (!maxEndDate || endDate.isAfter(maxEndDate)) {
-            maxEndDate = moment(endDate);
-          }
+      if (!maxEndDate || endDate.isAfter(maxEndDate)) {
+        maxEndDate = moment(endDate);
+      }
 
-          if (!maxEndDate || startDate.isAfter(maxEndDate)) {
-            maxEndDate = moment(startDate);
-          }
-        })
-    );
+      if (!maxEndDate || startDate.isAfter(maxEndDate)) {
+        maxEndDate = moment(startDate);
+      }
+    }
+
+    data.forEach(({ startDate, endDate, subtasks }) => {
+      if (startDate) calcBoundary(startDate, endDate);
+      subtasks &&
+        subtasks.forEach(({ startDate, endDate }) => {
+          calcBoundary(startDate, endDate);
+        });
+    });
 
     return {
       minStartDate,
@@ -68,7 +72,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   parseData(): Array<ITaskChart> {
     return this.data.map((task) => ({
       ...task,
-      left: 0,
+      left: task.startDate ? task.startDate.diff(this.dates[0], "days"): 0,
       subtasks: task.subtasks
         ? task.subtasks.map((subtask) => this.prepareSubtask(subtask))
         : undefined,
