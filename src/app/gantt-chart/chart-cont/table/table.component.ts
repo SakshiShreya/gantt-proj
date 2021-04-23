@@ -4,6 +4,7 @@ import {
   ITask,
   ISubtaskRaw,
   ISubtask,
+  TDuration,
 } from "../../interfaces/chartInterfaces";
 import { EMove } from "../../interfaces/chartEnums";
 import * as moment from "moment";
@@ -26,6 +27,8 @@ export class TableComponent implements OnChanges {
   @Input() chartDataRaw: Array<ITaskRaw>;
   chartData: Array<ITask> = [];
   eMove = EMove;
+  firstSubtask: string;
+  lastSubtask: string;
 
   constructor(
     public dialog: MatDialog,
@@ -34,34 +37,40 @@ export class TableComponent implements OnChanges {
     private route: ActivatedRoute
   ) {}
 
-  prepareSubtask({
-    startDate: startDateRaw,
-    duration,
-    ...subtask
-  }: ISubtaskRaw): ISubtask {
-    let startDate: moment.Moment;
-    if (startDateRaw) {
-      startDate = moment(startDateRaw);
-    }
-
+  calcEndDate(startDate: moment.Moment, duration: TDuration) {
     const endDate = moment(startDate);
     endDate.add(...([(duration[0] as number) - 1, duration[1]] || [0, "days"]));
+    return endDate;
+  }
 
-    return {
-      startDate,
-      endDate,
-      duration,
-      ...subtask,
-    };
+  prepareSubtask({ duration, ...subtask }: ISubtaskRaw): ISubtask {
+    const startDate = moment(subtask.startDate);
+    const endDate = this.calcEndDate(startDate, duration);
+
+    return { ...subtask, startDate, endDate, duration };
   }
 
   parseData(): Array<ITask> {
-    return this.chartDataRaw.map((task) => ({
-      ...task,
-      subtasks: task.subtasks
-        ? task.subtasks.map(this.prepareSubtask)
-        : undefined,
-    }));
+    return this.chartDataRaw.map(({ duration, ...task }) => {
+      const startDate = task.startDate ? moment(task.startDate) : undefined;
+
+      const taskOut = {
+        ...task,
+        endDate: startDate ? this.calcEndDate(startDate, duration) : undefined,
+        startDate,
+        duration,
+        subtasks: task.subtasks
+          ? task.subtasks.map((subtask) => this.prepareSubtask(subtask))
+          : undefined,
+      };
+
+      if (task.isSubtaskPresent) {
+        this.firstSubtask = this.firstSubtask || taskOut.id + "-" + 0;
+        this.lastSubtask = taskOut.id + "-" + (taskOut.subtasks.length - 1);
+      }
+
+      return taskOut;
+    });
   }
 
   ngOnChanges() {
@@ -191,11 +200,13 @@ export class TableComponent implements OnChanges {
         // remove the subtask from this task
         const remove = removeSubtask();
         // and add it to the bottom of previous task
-        const prevSubtasks = this.chartDataRaw[taskIndex - 1].subtasks || [];
+        let i = 1;
+        while (!this.chartDataRaw[taskIndex - i].isSubtaskPresent) i++;
+        const prevSubtasks = this.chartDataRaw[taskIndex - i].subtasks || [];
         prevSubtasks.push(subtasks[subtaskIndex]);
         const add = this.ganttFirebaseService.updateTask(
           projId,
-          this.chartDataRaw[taskIndex - 1].id,
+          this.chartDataRaw[taskIndex - i].id,
           { subtasks: prevSubtasks }
         );
 
@@ -216,11 +227,13 @@ export class TableComponent implements OnChanges {
         // remove the subtask from this task
         const remove = removeSubtask();
         // and add it to the top of previous task
-        const nextSubtasks = this.chartDataRaw[taskIndex + 1].subtasks || [];
+        let i = 1;
+        while (!this.chartDataRaw[taskIndex + i].isSubtaskPresent) i++;
+        const nextSubtasks = this.chartDataRaw[taskIndex + i].subtasks || [];
         nextSubtasks.unshift(subtasks[subtaskIndex]);
         const add = this.ganttFirebaseService.updateTask(
           projId,
-          this.chartDataRaw[taskIndex + 1].id,
+          this.chartDataRaw[taskIndex + i].id,
           { subtasks: nextSubtasks }
         );
 

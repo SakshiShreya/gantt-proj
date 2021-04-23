@@ -19,7 +19,11 @@
           </button>
           <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="editTask(task)">Edit</button>
-            <button mat-menu-item (click)="addSubtask(task)">
+            <button
+              *ngIf="task.isSubtaskPresent"
+              mat-menu-item
+              (click)="addSubtask(task)"
+            >
               Add sub-task
             </button>
             <button mat-menu-item [matMenuTriggerFor]="moveTask">Move</button>
@@ -45,7 +49,16 @@
             </button>
           </mat-menu>
         </div>
-        <div class="name">{{ task.name }}</div>
+        <div class="name" [ngClass]="{ auto: task.isSubtaskPresent }">
+          {{ task.name }}
+        </div>
+        <ng-container *ngIf="!task.isSubtaskPresent">
+          <div class="col" [title]="task.owner">{{ task.owner }}</div>
+          <div class="col">{{ task.startDate?.format("DD MMM, YY") }}</div>
+          <div class="col">{{ task.endDate?.format("DD MMM, YY") }}</div>
+          <div class="col">{{ task.duration?.join(" ") }}</div>
+          <div class="col col-r">{{ task.percentComplete }}</div>
+        </ng-container>
       </li>
       <li *ngFor="let subtask of task.subtasks; let id = index" class="subtask">
         <div class="icon">
@@ -72,17 +85,14 @@
             <button
               mat-menu-item
               (click)="moveSubtasks(taskId, id, eMove.UP)"
-              [disabled]="taskId === 0 && id === 0"
+              [disabled]="task.id + '-' + id === firstSubtask"
             >
               Move Up
             </button>
             <button
               mat-menu-item
               (click)="moveSubtasks(taskId, id, eMove.DOWN)"
-              [disabled]="
-                taskId === chartData.length - 1 &&
-                (task.subtasks.length ? id === task.subtasks.length - 1 : false)
-              "
+              [disabled]="task.id + '-' + id === lastSubtask"
             >
               Move Down
             </button>

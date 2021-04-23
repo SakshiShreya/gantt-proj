@@ -4,13 +4,15 @@ interface IChartExtra {
   left: number;
 }
 
+export type TDuration = [moment.DurationInputArg1, moment.DurationInputArg2];
+
 interface ITaskBase {
   name: string;
   id?: string;
   order: number;
   isSubtaskPresent: boolean;
   owner?: string;
-  duration?: [moment.DurationInputArg1, moment.DurationInputArg2];
+  duration?: TDuration;
   percentComplete?: number;
 }
 
@@ -33,7 +35,7 @@ interface ISubtaskBase {
   name: string;
   id?: string;
   owner: string;
-  duration: [moment.DurationInputArg1, moment.DurationInputArg2];
+  duration: TDuration;
   percentComplete: number;
 }
 

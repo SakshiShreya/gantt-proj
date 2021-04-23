@@ -42,13 +42,15 @@ export class TaskFormComponent implements OnInit {
       this.taskForm.setValue({
         name: this.data.row.name,
         isSubtaskPresent: this.data.row.isSubtaskPresent ? "yes" : "no",
-        owner: this.data.row.owner,
-        startDate: moment(this.data.row.startDate),
+        owner: this.data.row.owner || "",
+        startDate: moment(this.data.row.startDate) || null,
         duration: this.data.row.duration ? this.data.row.duration[0] : 0,
         percentComplete: this.data.row.percentComplete || 0,
       });
 
-      this.enableSubtaskFormFields(this.data.row.isSubtaskPresent ? "yes" : "no");
+      this.enableSubtaskFormFields(
+        this.data.row.isSubtaskPresent ? "yes" : "no"
+      );
     }
 
     this.taskForm.get("isSubtaskPresent").valueChanges.subscribe((value) => {
@@ -70,6 +72,7 @@ export class TaskFormComponent implements OnInit {
     const submitData = {
       ...this.taskForm.value,
       isSubtaskPresent: this.taskForm.value.isSubtaskPresent === "yes",
+      order: this.data.row.order,
     };
 
     if (!submitData.isSubtaskPresent) {
