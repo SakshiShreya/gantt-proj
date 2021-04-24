@@ -1,0 +1,16 @@
+.field-group {
+  display: flex;
+  align-items: baseline;
+
+  .third-width {
+    $gutter: 16px;
+    width: calc((100% - 40px) / 3 - #{$gutter});
+    margin-right: $gutter;
+    min-width: calc((100% - 40px) / 3 - #{$gutter});
+  }
+}
+
+.add {
+  margin-top: 1em;
+  margin-bottom: 1.25em;
+}

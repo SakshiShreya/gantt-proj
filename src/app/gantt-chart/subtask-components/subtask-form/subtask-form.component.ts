@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
 import { GanttFirebaseService } from "../../../shared/services/gantt-firebase.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { ITaskRaw } from "../../interfaces/chartInterfaces";
+import { IDependency, ITaskRaw } from "../../interfaces/chartInterfaces";
 import * as moment from "moment";
 
 @Component({
@@ -14,6 +14,7 @@ export class SubtaskFormComponent implements OnInit {
   subtaskForm = new FormGroup({
     name: new FormControl("", Validators.required),
     owner: new FormControl("", Validators.required),
+    dependencies: new FormArray([]),
     startDate: new FormControl("", Validators.required),
     duration: new FormControl(null, Validators.required),
     percentComplete: new FormControl(0, Validators.required),
@@ -39,7 +40,42 @@ export class SubtaskFormComponent implements OnInit {
         duration: formData.duration ? formData.duration[0] : 0,
         percentComplete: formData.percentComplete || 0,
       });
+
+      formData.dependencies.forEach((dependency) => {
+        this.addDependency(dependency);
+      });
     }
+  }
+
+  addDependency(dependency?: IDependency) {
+    const formGroup = new FormGroup({
+      subtask: new FormControl(
+        dependency ? dependency.subtask : null,
+        Validators.required
+      ),
+      depType: new FormControl(
+        dependency ? dependency.depType : null,
+        Validators.required
+      ),
+      value: new FormControl(
+        { disabled: true, value: dependency ? dependency.value : 0 },
+        Validators.required
+      ),
+    });
+    (this.subtaskForm.get("dependencies") as FormArray).push(formGroup);
+
+    formGroup.get("depType").valueChanges.subscribe((value) => {
+      if (value === "percentage" || value === "days") {
+        formGroup.patchValue({ value: 0 });
+        formGroup.get("value").enable();
+      } else {
+        formGroup.get("value").disable();
+      }
+    });
+  }
+
+  deleteDependency(index: number) {
+    (this.subtaskForm.get("dependencies") as FormArray).removeAt(index);
   }
 
   onSubmit() {

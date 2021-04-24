@@ -66,7 +66,7 @@ export class TableComponent implements OnChanges {
 
       if (task.isSubtaskPresent) {
         this.firstSubtask = this.firstSubtask || taskOut.id + "-" + 0;
-        this.lastSubtask = taskOut.id + "-" + (taskOut.subtasks.length - 1);
+        this.lastSubtask = taskOut.id + "-" + (taskOut.subtasks ? (taskOut.subtasks.length - 1) : undefined);
       }
 
       return taskOut;

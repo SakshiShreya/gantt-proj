@@ -31,12 +31,19 @@ export interface ITaskChart extends ITask, IChartExtra {
   subtasks?: Array<ISubtaskChart>;
 }
 
+export interface IDependency {
+  subtask: string;
+  depType: string;
+  value: number | null;
+}
+
 interface ISubtaskBase {
   name: string;
   id?: string;
   owner: string;
   duration: TDuration;
   percentComplete: number;
+  dependencies: Array<IDependency>;
 }
 
 export interface ISubtaskRaw extends ISubtaskBase {

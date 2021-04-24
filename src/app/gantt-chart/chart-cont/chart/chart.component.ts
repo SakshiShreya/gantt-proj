@@ -72,7 +72,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   parseData(): Array<ITaskChart> {
     return this.data.map((task) => ({
       ...task,
-      left: task.startDate ? task.startDate.diff(this.dates[0], "days"): 0,
+      left: task.startDate ? task.startDate.diff(this.dates[0], "days") : 0,
       subtasks: task.subtasks
         ? task.subtasks.map((subtask) => this.prepareSubtask(subtask))
         : undefined,
@@ -104,6 +104,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     this.chartData = this.parseData();
+    console.log("Update chart data", this.chartData);
   }
 
   ngOnInit() {

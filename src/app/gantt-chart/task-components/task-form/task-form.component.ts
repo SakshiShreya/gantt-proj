@@ -72,7 +72,7 @@ export class TaskFormComponent implements OnInit {
     const submitData = {
       ...this.taskForm.value,
       isSubtaskPresent: this.taskForm.value.isSubtaskPresent === "yes",
-      order: this.data.row.order,
+      order: this.data.row ? this.data.row.order : this.data.nextId,
     };
 
     if (!submitData.isSubtaskPresent) {

@@ -9,6 +9,76 @@
     <input matInput formControlName="owner" />
   </mat-form-field>
 
+  <div class="full-width" formArrayName="dependencies">
+    <mat-label class="full-width label mat-h4">Dependency</mat-label>
+
+    <div
+      class="field-group"
+      *ngFor="
+        let dependency of subtaskForm.get('dependencies').controls;
+        index as idx
+      "
+    >
+      <ng-container formGroupName="{{ idx }}">
+        <mat-form-field class="third-width">
+          <mat-label>Subtask *</mat-label>
+          <mat-select formControlName="subtask">
+            <ng-container
+              *ngFor="let subtask of data.parent.subtasks; index as id"
+            >
+              <mat-option
+                *ngIf="data.subtaskId !== id"
+                [value]="data.parent.id + '-' + id"
+                >{{ subtask.name }}</mat-option
+              >
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="third-width">
+          <mat-label>Dependency type *</mat-label>
+          <mat-select formControlName="depType">
+            <mat-option value="start-to-finish">Start to Finish</mat-option>
+            <mat-option value="start-to-start">Start to Start</mat-option>
+            <mat-option value="percentage">Completed Percentage</mat-option>
+            <mat-option value="days">After days</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field
+          class="third-width"
+          *ngIf="
+            dependency.value.depType === 'percentage' ||
+            dependency.value.depType === 'days'
+          "
+        >
+          <mat-label *ngIf="dependency.value.depType === 'percentage'"
+            >Percentage *</mat-label
+          >
+          <mat-label *ngIf="dependency.value.depType === 'days'"
+            >Days *</mat-label
+          >
+          <input matInput type="number" formControlName="value" />
+        </mat-form-field>
+        <div
+          class="third-width"
+          *ngIf="
+            dependency.value.depType !== 'percentage' &&
+            dependency.value.depType !== 'days'
+          "
+        ></div>
+      </ng-container>
+
+      <button mat-icon-button (click)="deleteDependency(idx)">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+
+    <div class="add">
+      <button mat-raised-button (click)="addDependency()">
+        <mat-icon>add</mat-icon> Add Dependency
+      </button>
+    </div>
+  </div>
+
   <mat-form-field class="full-width">
     <mat-label>Start Date *</mat-label>
     <input
@@ -27,7 +97,7 @@
     <mat-label>Duration *</mat-label>
     <input type="number" matInput formControlName="duration" />
   </mat-form-field>
-  
+
   <mat-form-field class="full-width">
     <mat-label>Percent Complete *</mat-label>
     <input type="number" matInput formControlName="percentComplete" />
