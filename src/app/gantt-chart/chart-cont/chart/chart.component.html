@@ -1,4 +1,5 @@
 <div class="chart">
+  <!-- Date row -->
   <ul>
     <li class="heading" [ngStyle]="{ 'width.px': dates.length * colWidth }">
       <div class="date-col" *ngFor="let date of dates">
@@ -6,12 +7,18 @@
       </div>
     </li>
   </ul>
+
+  <!-- Chart -->
   <ul>
     <ng-template ngFor let-task [ngForOf]="chartData" let-taskId="index">
-      <li class="task" [ngStyle]="{ 'width.px': dates.length * colWidth }">
+      <!-- Task -->
+      <li
+        class="task-row task"
+        [ngStyle]="{ 'width.px': dates.length * colWidth }"
+      >
         <div class="date-col" *ngFor="let date of dates"></div>
         <div
-          *ngIf="!task.isSubtaskPresent"
+          *ngIf="task.startDate"
           class="subtask-bar blue"
           [ngStyle]="{
             'left.px': task.left * colWidth,
@@ -30,7 +37,7 @@
       </li>
       <li
         *ngFor="let subtask of task.subtasks; let id = index"
-        class="subtask"
+        class="task-row"
         [ngStyle]="{ 'width.px': dates.length * colWidth }"
       >
         <div class="date-col" *ngFor="let date of dates"></div>

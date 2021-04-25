@@ -50,23 +50,77 @@ export class TableComponent implements OnChanges {
     return { ...subtask, startDate, endDate, duration };
   }
 
-  parseData(): Array<ITask> {
-    return this.chartDataRaw.map(({ duration, ...task }) => {
-      const startDate = task.startDate ? moment(task.startDate) : undefined;
+  // data is subtask here
+  findDateBoundaries(data?: Array<ISubtask>) {
+    if (data) {
+      let startDate: moment.Moment;
+      let endDate: moment.Moment;
 
-      const taskOut = {
-        ...task,
-        endDate: startDate ? this.calcEndDate(startDate, duration) : undefined,
+      data.forEach(({ startDate: sD, endDate: eD }) => {
+        if (!startDate || sD.isBefore(startDate)) {
+          startDate = moment(sD);
+        }
+
+        if (!startDate || sD.isBefore(startDate)) {
+          startDate = moment(eD);
+        }
+
+        if (!endDate || eD.isAfter(endDate)) {
+          endDate = moment(eD);
+        }
+
+        if (!endDate || sD.isAfter(endDate)) {
+          endDate = moment(sD);
+        }
+      });
+
+      return {
         startDate,
-        duration,
-        subtasks: task.subtasks
-          ? task.subtasks.map((subtask) => this.prepareSubtask(subtask))
-          : undefined,
+        endDate,
+        duration: (endDate
+          ? [endDate.diff(startDate, "days") + 1, "days"]
+          : [0, "days"]) as TDuration,
       };
+    } else {
+      return {
+        startDate: undefined,
+        endDate: undefined,
+        duration: [0, "days"] as TDuration,
+      };
+    }
+  }
+
+  parseData(): Array<ITask> {
+    return this.chartDataRaw.map(({ duration: dur, ...task }) => {
+      const subtasks = task.subtasks
+        ? task.subtasks.map((subtask) => this.prepareSubtask(subtask))
+        : undefined;
+
+      let dateBoundaries: {
+        startDate: moment.Moment;
+        endDate: moment.Moment;
+        duration: TDuration;
+      } = { startDate: undefined, endDate: undefined, duration: [0, "days"] };
+
+      if (task.isSubtaskPresent) {
+        dateBoundaries = this.findDateBoundaries(subtasks);
+      } else {
+        dateBoundaries.startDate = moment(task.startDate);
+        dateBoundaries.endDate = this.calcEndDate(
+          dateBoundaries.startDate,
+          dur
+        );
+        dateBoundaries.duration = dur;
+      }
+
+      const taskOut = { ...task, ...dateBoundaries, subtasks };
 
       if (task.isSubtaskPresent) {
         this.firstSubtask = this.firstSubtask || taskOut.id + "-" + 0;
-        this.lastSubtask = taskOut.id + "-" + (taskOut.subtasks ? (taskOut.subtasks.length - 1) : undefined);
+        this.lastSubtask =
+          taskOut.id +
+          "-" +
+          (taskOut.subtasks ? taskOut.subtasks.length - 1 : undefined);
       }
 
       return taskOut;
