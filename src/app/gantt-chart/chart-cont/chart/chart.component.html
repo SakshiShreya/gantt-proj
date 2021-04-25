@@ -1,4 +1,4 @@
-<div class="chart">
+<div class="chart" #chart>
   <!-- Date row -->
   <ul>
     <li class="heading" [ngStyle]="{ 'width.px': dates.length * colWidth }">
@@ -18,8 +18,9 @@
       >
         <div class="date-col" *ngFor="let date of dates"></div>
         <div
+          #tasks
           *ngIf="task.startDate"
-          class="subtask-bar blue"
+          class="bar task blue"
           [ngStyle]="{
             'left.px': task.left * colWidth,
             'width.px': task.duration[0] * colWidth
@@ -42,7 +43,8 @@
       >
         <div class="date-col" *ngFor="let date of dates"></div>
         <div
-          class="subtask-bar blue"
+          #tasks
+          class="bar subtask blue"
           [ngStyle]="{
             'left.px': subtask.left * colWidth,
             'width.px': subtask.duration[0] * colWidth
@@ -60,4 +62,14 @@
       </li>
     </ng-template>
   </ul>
+
+  <!-- Dependency lines -->
+  <div class="dependency-area">
+    <div *ngFor="let depPoint of dependencyPoints">
+      <svg [ngStyle]="{top: depPoint.top, left: depPoint.left}">
+        <polyline [attr.points]="depPoint.points" stroke="#ff4081" fill="none" />
+        <polygon [attr.points]="depPoint.triangle" fill="#ff4081"></polygon>
+      </svg>
+    </div>
+  </div>
 </div>

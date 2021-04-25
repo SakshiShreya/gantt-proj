@@ -57,3 +57,22 @@ export interface ISubtask extends ISubtaskBase {
 }
 
 export interface ISubtaskChart extends ISubtask, IChartExtra {}
+
+export interface IBoundary {
+  index: number;
+  bottom: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  width: number;
+}
+
+export interface IDependencyPoint {
+  top: number;
+  bottom: number;
+  right: number;
+  left: number;
+  points: string;
+  triangle: string;
+}

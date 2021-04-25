@@ -25,11 +25,15 @@ export class SubtaskFormComponent implements OnInit {
     private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<SubtaskFormComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { projId: string; chartdata: ITask[], parent: ITaskRaw; subtaskId?: number }
+    public data: {
+      projId: string;
+      chartdata: ITask[];
+      parent: ITaskRaw;
+      subtaskId?: number;
+    }
   ) {}
 
   ngOnInit() {
-    console.log(this.data);
     const { parent, subtaskId } = this.data;
     const formData = parent.subtasks[subtaskId];
 
@@ -42,9 +46,10 @@ export class SubtaskFormComponent implements OnInit {
         percentComplete: formData.percentComplete || 0,
       });
 
-      formData.dependencies.forEach((dependency) => {
-        this.addDependency(dependency);
-      });
+      formData.dependencies &&
+        formData.dependencies.forEach((dependency) => {
+          this.addDependency(dependency);
+        });
     }
   }
 

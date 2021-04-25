@@ -7,6 +7,8 @@
 }
 
 .chart {
+  position: relative;
+
   .date-col {
     padding: 0;
     width: 50px;
@@ -17,7 +19,7 @@
     position: relative;
   }
 
-  .subtask-bar {
+  .bar {
     position: absolute;
     height: 32px;
     top: 2px;
@@ -49,5 +51,17 @@
 
   .name {
     color: white;
+  }
+}
+
+.dependency-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  svg {
+    position: absolute;
   }
 }
