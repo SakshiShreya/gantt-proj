@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from "@angular/core";
 import { FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
 import { GanttFirebaseService } from "../../../shared/services/gantt-firebase.service";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { IDependency, ITaskRaw } from "../../interfaces/chartInterfaces";
+import { IDependency, ITask, ITaskRaw } from "../../interfaces/chartInterfaces";
 import * as moment from "moment";
 
 @Component({
@@ -25,10 +25,11 @@ export class SubtaskFormComponent implements OnInit {
     private ganttFirebaseService: GanttFirebaseService,
     public dialogRef: MatDialogRef<SubtaskFormComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { projId: string; parent: ITaskRaw; subtaskId?: number }
+    public data: { projId: string; chartdata: ITask[], parent: ITaskRaw; subtaskId?: number }
   ) {}
 
   ngOnInit() {
+    console.log(this.data);
     const { parent, subtaskId } = this.data;
     const formData = parent.subtasks[subtaskId];
 

@@ -104,7 +104,7 @@ export class ChartComponent implements OnInit, OnDestroy {
     }
 
     this.chartData = this.parseData();
-    console.log("Update chart data", this.chartData);
+    // console.log("Update chart data", this.chartData);
   }
 
   ngOnInit() {

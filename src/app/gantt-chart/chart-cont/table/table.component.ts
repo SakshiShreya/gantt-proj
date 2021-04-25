@@ -164,7 +164,7 @@ export class TableComponent implements OnChanges {
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { projId, parent: row },
+      data: { projId, chartData: this.chartData, parent: row },
     });
   }
 
@@ -176,7 +176,7 @@ export class TableComponent implements OnChanges {
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { projId, parent: this.chartDataRaw[taskId], subtaskId },
+      data: { projId, chartData: this.chartData, parent: this.chartDataRaw[taskId], subtaskId },
     });
   }
 
