@@ -66,8 +66,19 @@
   <!-- Dependency lines -->
   <div class="dependency-area">
     <div *ngFor="let depPoint of dependencyPoints">
-      <svg [ngStyle]="{top: depPoint.top, left: depPoint.left}">
-        <polyline [attr.points]="depPoint.points" stroke="#ff4081" fill="none" />
+      <svg
+        [ngStyle]="{
+          top: depPoint.top,
+          left: depPoint.left,
+          width: depPoint.right - depPoint.left,
+          height: depPoint.bottom - depPoint.top + 18
+        }"
+      >
+        <polyline
+          [attr.points]="depPoint.points"
+          stroke="#ff4081"
+          fill="none"
+        />
         <polygon [attr.points]="depPoint.triangle" fill="#ff4081"></polygon>
       </svg>
     </div>

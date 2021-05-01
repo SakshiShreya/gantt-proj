@@ -24,11 +24,13 @@
           <mat-label>Subtask *</mat-label>
           <mat-select formControlName="subtask">
             <ng-container *ngFor="let task of data.chartData">
-              <mat-option [value]="task.id" class="mat-body-strong">{{ task.name }}</mat-option>
+              <mat-option [value]="task.id" class="mat-body-strong">{{
+                task.name
+              }}</mat-option>
               <ng-container *ngFor="let subtask of task.subtasks; index as id">
                 <mat-option
                   *ngIf="data.parent.id !== task.id || data.subtaskId !== id"
-                  [value]="data.parent.id + '-' + id"
+                  [value]="task.id + '-' + id"
                   >&nbsp;&nbsp;{{ subtask.name }}</mat-option
                 >
               </ng-container>

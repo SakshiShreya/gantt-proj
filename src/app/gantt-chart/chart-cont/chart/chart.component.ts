@@ -224,7 +224,6 @@ export class ChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         });
     });
-    console.log(this.dependencyPoints);
   }
 
   ngOnInit() {
