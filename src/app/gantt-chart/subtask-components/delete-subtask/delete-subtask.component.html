@@ -1,5 +1,6 @@
 <div class="confirmation-cont">
   <p>Are you sure you want to delete {{ data.parent.subtasks[data.subtaskId].name }}?</p>
+  <p class="warning"><mat-icon inline class="warning">warning</mat-icon>This task depends on other tasks. This action will delete this task as other task's dependency.</p>
   <ng-content></ng-content>
   <button mat-raised-button color="primary" (click)="deleteSubtask()">Yes</button>
   <button mat-raised-button color="primary" (click)="closePopup()">No</button>

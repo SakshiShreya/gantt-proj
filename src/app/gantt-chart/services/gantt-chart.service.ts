@@ -8,7 +8,8 @@ import {
 
 export class GanttChartService {
   private parseDataState = new Subject<Array<ITask>>();
-  parseData = Array<ITask>();
+  parseData: Array<ITask>;
+  rawData: Array<ITaskRaw>;
 
   setParseData(data: Array<ITask>) {
     this.parseData = data;
@@ -26,9 +27,9 @@ export class GanttChartService {
    * @returns Array<taskindex, subtaskindex]> of all subtasks that are dependendent on current subtask
    */
   findDependents(
-    data: Array<ITaskRaw> | Array<ITask>,
     taskIndex: number,
-    subtaskIndex: number
+    subtaskIndex: number,
+    data: Array<ITaskRaw> | Array<ITask> = this.parseData
   ) {
     const dependents: Array<[number, number]> = [];
     data.forEach((task: ITaskRaw | ITask, taskid: number) => {

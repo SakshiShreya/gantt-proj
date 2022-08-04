@@ -185,14 +185,15 @@ export class TableComponent implements OnChanges {
     });
   }
 
-  deleteSubtask(taskId: string, subtaskId: number) {
+  deleteSubtask(taskId: number, subtaskId: number) {
     const projId = this.route.snapshot.params.id;
+    const dependents = this.ganttChartService.findDependents(taskId, subtaskId, this.chartDataRaw);
     this.dialog.open(DeleteSubtaskComponent, {
       width: "50%",
       minWidth: "300px",
       maxWidth: "550px",
       maxHeight: "100vh",
-      data: { projId, parent: this.chartDataRaw[taskId], subtaskId },
+      data: { projId, parent: this.chartDataRaw[taskId], subtaskId, dependents },
     });
   }
 
