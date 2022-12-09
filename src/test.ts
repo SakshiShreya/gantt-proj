@@ -18,3 +18,6 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
+
+// Nov 2022 61 vulnerabilities (1 low, 31 moderate, 23 high, 6 critical)
+// 10 Dec 2022 64 vulnerabilities (1 low, 31 moderate, 26 high, 6 critical)
